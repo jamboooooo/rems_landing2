@@ -1,0 +1,41 @@
+---
+import SEOHead from '@/components/seo/SEOHead.astro';
+import Footer from '@/components/shared/Footer.astro';
+import Header from '@/components/shared/Header.astro';
+import '@/styles/globals.css';
+
+type Props = {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  pathname?: string;
+};
+
+const { title, description, image, noindex, pathname = Astro.url.pathname } = Astro.props as Props;
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <SEOHead {title} {description} {image} {noindex} {pathname} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      fetchpriority="high"
+    />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,36 @@
+---
+import { siteConfig } from '@/config/site';
+import { buildSEOMetadata, type SEOInput } from '@/lib/seo';
+
+type Props = SEOInput & {
+  pathname?: string;
+};
+
+const { pathname = '/', ...input } = Astro.props as Props;
+const metadata = buildSEOMetadata({
+  ...input,
+  canonical: input.canonical ?? new URL(pathname, siteConfig.url).toString(),
+});
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content={metadata.description} />
+<meta name="robots" content={metadata.noindex ? 'noindex, nofollow' : 'index, follow'} />
+<link rel="canonical" href={metadata.canonical} />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={siteConfig.name} />
+<meta property="og:locale" content={siteConfig.locale} />
+<meta property="og:title" content={metadata.title} />
+<meta property="og:description" content={metadata.description} />
+<meta property="og:url" content={metadata.canonical} />
+<meta property="og:image" content={new URL(metadata.image, siteConfig.url).toString()} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={metadata.title} />
+<meta name="twitter:description" content={metadata.description} />
+<meta name="twitter:image" content={new URL(metadata.image, siteConfig.url).toString()} />
+<meta name="twitter:site" content={siteConfig.twitterHandle} />
+
+<title>{metadata.title}</title>

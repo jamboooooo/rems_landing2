@@ -1,17 +1,34 @@
 ---
-
+import { Image } from 'astro:assets';
+import { LeadForm } from '@/components/forms/LeadForm';
+import MapIsland from '@/components/map/MapIsland.astro';
+import { PropertyGrid } from '@/entities/property/ui/PropertyGrid';
+import MainLayout from '@/layouts/MainLayout.astro';
+import heroPlaceholder from '@/assets/hero-placeholder.svg';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<MainLayout title="Frontend Foundation" description="Production-ready architecture baseline">
+  <section class="section-padding">
+    <div class="container space-y-8">
+      <h1 class="text-[length:var(--text-display)] font-semibold text-balance">
+        Premium Estates foundation
+      </h1>
+      <p class="max-w-3xl text-[var(--color-muted-foreground)]">
+        Astro + React islands baseline for SEO-first real estate platform.
+      </p>
+      <Image
+        src={heroPlaceholder}
+        alt="Hero placeholder"
+        widths={[640, 960, 1280]}
+        sizes="(max-width: 768px) 100vw, 1280px"
+        loading="lazy"
+        class="w-full rounded-[var(--radius-lg)]"
+      />
+      <PropertyGrid />
+      <div class="grid gap-6 lg:grid-cols-2">
+        <LeadForm client:idle />
+        <MapIsland />
+      </div>
+    </div>
+  </section>
+</MainLayout>

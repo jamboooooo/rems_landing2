@@ -1,5 +1,5 @@
 {
-  "name": "mad-moon",
+  "name": "rems-landing",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -9,9 +9,48 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "astro check && tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check"
   },
   "dependencies": {
-    "astro": "^6.1.9"
+    "@astrojs/react": "^5.0.4",
+    "@astrojs/sitemap": "^3.7.2",
+    "@hookform/resolvers": "^5.2.2",
+    "@pbe/react-yandex-maps": "^1.2.5",
+    "@tailwindcss/vite": "^4.2.4",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "astro": "^6.1.9",
+    "astro-compress": "^2.4.1",
+    "axios": "^1.15.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.8.0",
+    "motion": "^12.38.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "react-hook-form": "^7.73.1",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss": "^4.2.4",
+    "zod": "^4.3.6",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.8",
+    "@typescript-eslint/eslint-plugin": "^8.59.0",
+    "@typescript-eslint/parser": "^8.59.0",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-astro": "^1.7.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-simple-import-sort": "^13.0.0",
+    "prettier": "^3.8.3",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "typescript": "^6.0.3"
   }
 }
