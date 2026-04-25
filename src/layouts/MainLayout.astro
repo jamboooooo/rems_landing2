@@ -13,6 +13,7 @@ type Props = {
 };
 
 const { title, description, image, noindex, pathname = Astro.url.pathname } = Astro.props as Props;
+const base = import.meta.env.BASE_URL;
 ---
 
 <!doctype html>
@@ -20,8 +21,8 @@ const { title, description, image, noindex, pathname = Astro.url.pathname } = As
   <head>
     <SEOHead {title} {description} {image} {noindex} {pathname} />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/png" href="/logo.png" />
-    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="icon" type="image/png" href={`${base}logo.png`} />
+    <link rel="apple-touch-icon" href={`${base}logo.png`} />
     <script is:inline>
       (() => {
         const key = 'theme';
