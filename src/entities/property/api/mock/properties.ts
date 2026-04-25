@@ -1,5 +1,9 @@
 import type { PropertyListItem } from '@/entities/property/model/types';
 
+const base = import.meta.env.BASE_URL;
+const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+const assetUrl = (path: string) => `${normalizedBase}${path.replace(/^\/+/, '')}`;
+
 export const mockProperties: PropertyListItem[] = [
   {
     id: '2fbe9406-d7a6-4ac4-8c08-7e9a8c90e701',
@@ -19,8 +23,7 @@ export const mockProperties: PropertyListItem[] = [
     source: 'stepalliance',
     authorId: 101,
     createdAt: '2026-02-16T08:30:00.000Z',
-    preview:
-      'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80',
+    preview: assetUrl('images/property-placeholder.svg'),
   },
   {
     id: 'd67b2d20-613b-4452-b11a-8e8de1a6be4c',
@@ -40,8 +43,7 @@ export const mockProperties: PropertyListItem[] = [
     source: 'behomes',
     authorId: 102,
     createdAt: '2026-01-04T12:20:00.000Z',
-    preview:
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+    preview: assetUrl('images/property-placeholder.svg'),
   },
   {
     id: '6b7f1e62-1f0e-48df-8b03-bca054f4de59',
@@ -61,8 +63,7 @@ export const mockProperties: PropertyListItem[] = [
     source: 'stepalliance',
     authorId: 103,
     createdAt: '2026-03-10T09:10:00.000Z',
-    preview:
-      'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80',
+    preview: assetUrl('images/property-placeholder.svg'),
   },
   {
     id: '241f3e89-2372-4282-8be7-9dc72cff14f5',
@@ -82,8 +83,7 @@ export const mockProperties: PropertyListItem[] = [
     source: 'behomes',
     authorId: 104,
     createdAt: '2026-01-21T14:45:00.000Z',
-    preview:
-      'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80',
+    preview: assetUrl('images/property-placeholder.svg'),
   },
   {
     id: 'f787eff6-73f0-482d-ac20-23dc4f12acd1',
@@ -103,8 +103,7 @@ export const mockProperties: PropertyListItem[] = [
     source: 'stepalliance',
     authorId: 105,
     createdAt: '2026-02-11T10:15:00.000Z',
-    preview:
-      'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80',
+    preview: assetUrl('images/property-placeholder.svg'),
   },
   {
     id: '7ca09b88-57c3-4df8-a08c-17ecebcf8f9b',
@@ -124,8 +123,7 @@ export const mockProperties: PropertyListItem[] = [
     source: 'behomes',
     authorId: 106,
     createdAt: '2026-02-26T17:30:00.000Z',
-    preview:
-      'https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=1200&q=80',
+    preview: assetUrl('images/property-placeholder.svg'),
   },
   {
     id: 'f2454f95-50ee-4262-845f-f44ce220f632',
@@ -145,8 +143,7 @@ export const mockProperties: PropertyListItem[] = [
     source: 'stepalliance',
     authorId: 107,
     createdAt: '2025-12-15T11:00:00.000Z',
-    preview:
-      'https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80',
+    preview: assetUrl('images/property-placeholder.svg'),
   },
   {
     id: 'b8994ce9-5cc1-40fb-8d8d-a4f220113aef',
@@ -166,8 +163,7 @@ export const mockProperties: PropertyListItem[] = [
     source: 'behomes',
     authorId: 108,
     createdAt: '2026-03-03T07:55:00.000Z',
-    preview:
-      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80',
+    preview: assetUrl('images/property-placeholder.svg'),
   },
   {
     id: 'd57ca56e-9de6-4e7f-9804-f65418e07f4b',
@@ -187,8 +183,7 @@ export const mockProperties: PropertyListItem[] = [
     source: 'stepalliance',
     authorId: 109,
     createdAt: '2026-02-05T06:40:00.000Z',
-    preview:
-      'https://images.unsplash.com/photo-1501183638710-841dd1904471?auto=format&fit=crop&w=1200&q=80',
+    preview: assetUrl('images/property-placeholder.svg'),
   },
   {
     id: '8d70f8b7-f223-4220-8504-2fd7854b54b0',
@@ -208,7 +203,6 @@ export const mockProperties: PropertyListItem[] = [
     source: 'behomes',
     authorId: 110,
     createdAt: '2025-11-27T15:20:00.000Z',
-    preview:
-      'https://images.unsplash.com/photo-1600047509782-20d39509f26d?auto=format&fit=crop&w=1200&q=80',
+    preview: assetUrl('images/property-placeholder.svg'),
   },
 ];

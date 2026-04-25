@@ -7,27 +7,30 @@ type OfficeSlide = {
   note: string;
 };
 
+const base = import.meta.env.BASE_URL;
+const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+
 const slides: OfficeSlide[] = [
   {
-    src: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=80',
+    src: `${normalizedBase}images/office-1.svg`,
     alt: 'Переговорная зона офиса',
     title: 'Переговорная зона',
     note: 'Проводим консультации и обсуждаем стратегию сделки в комфортной обстановке.',
   },
   {
-    src: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1600&q=80',
+    src: `${normalizedBase}images/office-2.svg`,
     alt: 'Рабочее пространство команды',
     title: 'Рабочее пространство',
     note: 'Команда анализирует рынок, подбирает объекты и готовит персональные подборки.',
   },
   {
-    src: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1600&q=80',
+    src: `${normalizedBase}images/office-3.svg`,
     alt: 'Зона приема клиентов',
     title: 'Зона приема клиентов',
     note: 'Здесь встречаем клиентов и сопровождаем сделки от консультации до подписания.',
   },
   {
-    src: 'https://images.unsplash.com/photo-1497366412874-3415097a27e7?auto=format&fit=crop&w=1600&q=80',
+    src: `${normalizedBase}images/office-4.svg`,
     alt: 'Офисный лаунж',
     title: 'Офисный лаунж',
     note: 'Спокойное пространство для общения, согласования деталей и принятия решений.',

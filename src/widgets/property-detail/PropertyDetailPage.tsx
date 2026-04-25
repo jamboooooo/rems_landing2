@@ -71,8 +71,7 @@ function SectionTitle({
 export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
   const base = import.meta.env.BASE_URL;
   const normalizedBase = base.endsWith('/') ? base : `${base}/`;
-  const fallbackPhoto =
-    'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&q=80';
+  const fallbackPhoto = `${normalizedBase}images/property-placeholder.svg`;
   const photos = useMemo(() => galleryPhotos(property), [property]);
   const initialPhoto = photos[0] || property.preview || fallbackPhoto;
   const [activePhoto, setActivePhoto] = useState(initialPhoto);

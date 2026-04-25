@@ -12,6 +12,7 @@ export function PropertyCardPremium({ property }: PropertyCardPremiumProps) {
   const base = import.meta.env.BASE_URL;
   const normalizedBase = base.endsWith('/') ? base : `${base}/`;
   const href = `${normalizedBase}properties/${property.id}`;
+  const fallbackPreview = `${normalizedBase}images/property-placeholder.svg`;
 
   return (
     <article className="group relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-sm transition-shadow duration-300 hover:shadow-lg">
@@ -23,8 +24,7 @@ export function PropertyCardPremium({ property }: PropertyCardPremiumProps) {
       <div className="relative aspect-[4/3] overflow-hidden bg-[var(--color-muted)]">
         <img
           src={
-            property.preview ??
-            'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=80'
+            property.preview ?? fallbackPreview
           }
           alt={property.name}
           loading="lazy"
