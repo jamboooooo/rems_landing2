@@ -20,8 +20,17 @@ const { title, description, image, noindex, pathname = Astro.url.pathname } = As
   <head>
     <SEOHead {title} {description} {image} {noindex} {pathname} />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <script is:inline>
+      (() => {
+        const key = 'theme';
+        const saved = localStorage.getItem(key);
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = saved === 'light' || saved === 'dark' ? saved : prefersDark ? 'dark' : 'light';
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+      })();
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
@@ -33,7 +42,7 @@ const { title, description, image, noindex, pathname = Astro.url.pathname } = As
   </head>
   <body>
     <Header />
-    <main>
+    <main class="min-w-0 max-w-full overflow-x-clip pt-24 md:pt-28">
       <slot />
     </main>
     <Footer />

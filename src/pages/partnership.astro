@@ -1,0 +1,88 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+---
+
+<MainLayout
+  title="Partnership | Step Dream"
+  description="Become a partner of Step Dream and grow your real estate income with us."
+  pathname={Astro.url.pathname}
+>
+  <div
+    class="pointer-events-none fixed inset-0 -z-10"
+    style={`background:
+      radial-gradient(1000px 440px at 10% -10%, color-mix(in srgb, var(--color-primary) 22%, transparent), transparent 62%),
+      radial-gradient(860px 420px at 90% -5%, color-mix(in srgb, var(--color-accent) 46%, transparent), transparent 66%),
+      linear-gradient(180deg, color-mix(in srgb, var(--color-muted) 55%, transparent), transparent 68%);`}
+  >
+  </div>
+
+  <section class="relative py-12 md:py-18">
+    <div class="container">
+      <div
+        class="grid min-h-[calc(100vh-12rem)] items-center gap-6 overflow-hidden rounded-[2rem] border border-[color-mix(in_srgb,var(--color-primary)_20%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-background)_86%,transparent)] p-6 shadow-[var(--shadow-xl)] backdrop-blur-xl md:gap-10 md:p-10 lg:grid-cols-[1.1fr_0.9fr] lg:p-14"
+      >
+        <div
+          class="pointer-events-none absolute inset-0 opacity-80"
+          style={`background:
+            radial-gradient(520px 180px at 8% 0%, color-mix(in srgb, var(--color-primary) 14%, transparent), transparent 70%),
+            radial-gradient(380px 160px at 96% 100%, color-mix(in srgb, var(--color-accent) 42%, transparent), transparent 72%);`}
+        >
+        </div>
+
+        <div class="relative">
+          <p class="text-xs tracking-[0.22em] text-[var(--color-muted-foreground)] uppercase">
+            partnership program
+          </p>
+          <h1 class="mt-4 max-w-2xl text-3xl leading-tight font-semibold text-balance md:text-5xl">
+            Grow your income with Step Dream.
+            <br />
+            Become our partner.
+          </h1>
+          <p class="mt-5 max-w-xl text-sm leading-relaxed text-[var(--color-muted-foreground)] md:text-base">
+            Get access to premium listings, trusted support, and a strong brand. You focus on
+            deals, we support your growth.
+          </p>
+
+          <div class="mt-8 flex flex-wrap items-center gap-3">
+            <a
+              href="#PARTNER_REGISTRATION_URL"
+              class="inline-flex h-12 items-center justify-center rounded-xl border border-[color-mix(in_srgb,var(--color-primary)_35%,var(--color-border))] bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-primary)_88%,black),var(--color-primary))] px-7 text-sm font-medium text-[var(--color-primary-foreground)] shadow-sm transition hover:-translate-y-0.5 hover:brightness-105"
+            >
+              Become a Partner
+            </a>
+            <span class="text-xs text-[var(--color-muted-foreground)]">
+              Replace `#PARTNER_REGISTRATION_URL` with your registration link.
+            </span>
+          </div>
+        </div>
+
+        <div
+          class="relative rounded-2xl border border-[color-mix(in_srgb,var(--color-primary)_18%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-background)_92%,white)] p-6 shadow-[var(--shadow-md)] md:p-8"
+        >
+          <p class="text-xs tracking-[0.2em] text-[var(--color-muted-foreground)] uppercase">
+            why join us
+          </p>
+          <h2 class="mt-3 text-2xl font-semibold leading-tight">Your growth, backed by our system</h2>
+
+          <ul class="mt-6 space-y-3">
+            <li
+              class="rounded-xl border border-[var(--color-border)]/80 bg-[color-mix(in_srgb,var(--color-accent)_55%,transparent)] px-4 py-3 text-sm"
+            >
+              Premium property inventory with strong demand.
+            </li>
+            <li
+              class="rounded-xl border border-[var(--color-border)]/80 bg-[color-mix(in_srgb,var(--color-accent)_45%,transparent)] px-4 py-3 text-sm"
+            >
+              Marketing and deal support from our team.
+            </li>
+            <li
+              class="rounded-xl border border-[var(--color-border)]/80 bg-[color-mix(in_srgb,var(--color-accent)_35%,transparent)] px-4 py-3 text-sm"
+            >
+              Transparent process and long-term partnership model.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</MainLayout>

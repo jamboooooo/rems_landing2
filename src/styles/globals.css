@@ -156,6 +156,7 @@
 
   html {
     scroll-behavior: smooth;
+    scrollbar-gutter: stable;
   }
 
   body {
@@ -550,6 +551,7 @@
 
   html {
     scroll-behavior: smooth;
+    scrollbar-gutter: stable;
   }
 
   body {
@@ -583,5 +585,9 @@
 }
 
 @utility section-padding {
-  padding-block: var(--space-section-y);
+  padding-block: var(--section-spacing-mobile);
+
+  @variant md {
+    padding-block: var(--section-spacing);
+  }
 }

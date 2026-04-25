@@ -2,7 +2,6 @@
 import MainLayout from '@/layouts/MainLayout.astro';
 import type { PropertyFilters } from '@/entities/property/model/types';
 import { PropertiesCatalogIsland } from '@/widgets/properties-grid/PropertiesCatalogIsland';
-import PropertiesHero from '@/widgets/properties-hero/PropertiesHero.astro';
 
 function numberParam(value: string | null) {
   if (!value) return undefined;
@@ -34,43 +33,6 @@ const initialFilters: PropertyFilters = {
   description="Explore curated premium real estate with elegant filtering and image-first browsing."
   pathname={Astro.url.pathname + Astro.url.search}
 >
-  <section class="relative overflow-hidden pb-8">
-    <div
-      class="absolute inset-0 -z-10"
-      style={`background:
-        radial-gradient(1200px 380px at 12% 0%, color-mix(in srgb, var(--color-primary) 18%, transparent), transparent 65%),
-        radial-gradient(900px 320px at 86% 0%, color-mix(in srgb, var(--color-accent) 40%, transparent), transparent 62%),
-        linear-gradient(180deg, color-mix(in srgb, var(--color-muted) 55%, transparent) 0%, transparent 100%);`}
-    >
-    </div>
-    <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-px bg-[var(--color-border)]">
-    </div>
-    <PropertiesHero />
-    <div class="container">
-      <div
-        class="grid gap-3 rounded-2xl border bg-[var(--color-card)]/80 p-4 backdrop-blur md:grid-cols-3 md:p-5"
-      >
-        <div>
-          <p class="text-xs tracking-[0.14em] text-[var(--color-muted-foreground)] uppercase">
-            curated collection
-          </p>
-          <p class="mt-1 text-sm font-medium">Premium listings across key locations</p>
-        </div>
-        <div>
-          <p class="text-xs tracking-[0.14em] text-[var(--color-muted-foreground)] uppercase">
-            smart filtering
-          </p>
-          <p class="mt-1 text-sm font-medium">Refine by type, budget, status and more</p>
-        </div>
-        <div>
-          <p class="text-xs tracking-[0.14em] text-[var(--color-muted-foreground)] uppercase">
-            image-first view
-          </p>
-          <p class="mt-1 text-sm font-medium">Clean visual cards with luxury presentation</p>
-        </div>
-      </div>
-    </div>
-  </section>
   <PropertiesCatalogIsland client:idle initialFilters={initialFilters} />
 
   <section class="pb-24">

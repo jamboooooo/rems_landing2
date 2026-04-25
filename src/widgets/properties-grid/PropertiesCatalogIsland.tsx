@@ -44,7 +44,7 @@ export function PropertiesCatalogIsland({ initialFilters }: PropertiesCatalogIsl
   useUrlQuerySync(filters);
 
   return (
-    <section className="pb-20">
+    <section className="min-h-[calc(100vh-8rem)] pb-20">
       <div className="container space-y-6">
         <PropertiesFilters filters={filters} onChange={setFilters} />
 
