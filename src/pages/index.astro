@@ -8,6 +8,7 @@ import MainLayout from '@/layouts/MainLayout.astro';
 import heroPlaceholder from '@/assets/hero-placeholder.svg';
 
 const base = import.meta.env.BASE_URL;
+const normalizedBase = base.endsWith('/') ? base : `${base}/`;
 ---
 
 <MainLayout
@@ -39,7 +40,7 @@ const base = import.meta.env.BASE_URL;
           </p>
           <div class="mt-7 flex flex-wrap gap-3">
             <a
-              href={`${base}properties`}
+              href={`${normalizedBase}properties`}
               class="hero-btn-primary inline-flex h-11 items-center justify-center rounded-[var(--radius-md)] px-6 text-sm font-medium transition-all hover:-translate-y-0.5"
             >
               Подобрать объект
