@@ -26,7 +26,7 @@ export function LeadForm() {
   });
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-3 rounded-[var(--radius-lg)] border p-4">
+    <form onSubmit={onSubmit} className="grid gap-3 rounded-lg border p-4">
       <Input placeholder="Имя" {...form.register('name')} />
       <Input placeholder="Телефон" {...form.register('phone')} />
       <Button type="submit">Отправить</Button>

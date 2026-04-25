@@ -9,8 +9,15 @@ type PropertyCardPremiumProps = {
 };
 
 export function PropertyCardPremium({ property }: PropertyCardPremiumProps) {
+  const href = `/properties/${property.id}`;
+
   return (
-    <article className="group overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-sm transition-shadow duration-300 hover:shadow-lg">
+    <article className="group relative overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] shadow-sm transition-shadow duration-300 hover:shadow-lg">
+      <a
+        href={href}
+        className="absolute inset-0 z-10 rounded-2xl focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:outline-none"
+        aria-label={`Open ${property.name}`}
+      />
       <div className="relative aspect-[4/3] overflow-hidden bg-[var(--color-muted)]">
         <img
           src={
@@ -21,7 +28,7 @@ export function PropertyCardPremium({ property }: PropertyCardPremiumProps) {
           loading="lazy"
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute top-3 left-3 flex gap-2">
+        <div className="pointer-events-none absolute top-3 left-3 z-20 flex gap-2">
           <span className="rounded-full bg-black/65 px-3 py-1 text-xs font-medium text-white backdrop-blur">
             {statusLabels[property.status]}
           </span>
@@ -31,7 +38,7 @@ export function PropertyCardPremium({ property }: PropertyCardPremiumProps) {
         </div>
       </div>
 
-      <div className="space-y-3 p-5">
+      <div className="relative z-20 space-y-3 p-5">
         <div className="space-y-1">
           <h3 className="text-lg leading-tight font-semibold">{property.name}</h3>
           <p className="text-sm text-[var(--color-muted-foreground)]">{property.location}</p>
@@ -51,14 +58,10 @@ export function PropertyCardPremium({ property }: PropertyCardPremiumProps) {
           </span>
         </div>
 
-        <button
-          type="button"
-          className="inline-flex items-center gap-1 text-sm font-medium text-[var(--color-foreground)] transition-opacity hover:opacity-75 focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:outline-none"
-          aria-label={`View details for ${property.name}`}
-        >
+        <span className="inline-flex items-center gap-1 text-sm font-medium text-[var(--color-foreground)]">
           View Details
           <ArrowUpRight size={16} />
-        </button>
+        </span>
       </div>
     </article>
   );

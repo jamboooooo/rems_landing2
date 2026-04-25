@@ -1,0 +1,26 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import { getPropertyPublic } from '@/entities/property/api/property-public.api';
+import { mockProperties } from '@/entities/property/api/mock/properties';
+import { PropertyDetailPage } from '@/widgets/property-detail/PropertyDetailPage';
+
+export async function getStaticPaths() {
+  return mockProperties.map((p) => ({ params: { id: p.id } }));
+}
+
+const { id } = Astro.params;
+const property = id ? await getPropertyPublic(id) : null;
+
+if (!property) {
+  return Astro.redirect('/properties');
+}
+
+const title = `${property.name} | Step Dream`;
+const description =
+  property.description?.slice(0, 155) ??
+  `${property.type} in ${property.location} — ${property.developer}`;
+---
+
+<MainLayout title={title} description={description} pathname={Astro.url.pathname}>
+  <PropertyDetailPage client:load property={property} />
+</MainLayout>

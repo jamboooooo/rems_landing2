@@ -9,6 +9,7 @@ export const PROPERTY_TYPE = [
   'STUDIO',
   'DUPLEX',
   'BUNGALOW',
+  'MANSION',
   'SERVICED_APARTMENT',
 ] as const;
 export const OWNERSHIP_TYPE = ['LEASEHOLD', 'FREEHOLD'] as const;
@@ -88,7 +89,45 @@ export const typeLabels: Record<PropertyType, string> = {
   STUDIO: 'Studio',
   DUPLEX: 'Duplex',
   BUNGALOW: 'Bungalow',
+  MANSION: 'Mansion',
   SERVICED_APARTMENT: 'Serviced Apartment',
+};
+
+export type AttachmentType = 'PHOTO' | 'VIDEO' | 'FLOOR_PLAN' | 'DOCUMENT' | 'PROMO_MATERIAL';
+
+export type AttachmentItem = {
+  id: string;
+  url: string;
+  type: AttachmentType;
+  title?: string;
+};
+
+/** Public payload for property detail (API-aligned). */
+export type PropertyPublic = {
+  id: string;
+  authorId: string;
+  area: number;
+  name: string;
+  developer: string;
+  price: number;
+  currency: Currency;
+  location: string;
+  type: PropertyType;
+  bedrooms: number;
+  bathrooms: number;
+  status: PropertyStatus;
+  ownershipType?: OwnershipType;
+  completionDate?: string;
+  description?: string;
+  features?: string[];
+  mapCoordinates: { lat: number; lng: number };
+  infrastructure?: string[];
+  created_at?: string;
+  attachments: AttachmentItem[];
+  preview: string;
+  videoLinks: string[];
+  priceList?: { floor?: number; price: number; bedrooms: number; bathrooms: number }[];
+  prices: { usd: number; rub: number; aed: number };
 };
 
 export const ownershipTypeLabels: Record<OwnershipType, string> = {

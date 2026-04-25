@@ -1,6 +1,148 @@
-<header class="border-b border-[var(--color-border)] bg-[var(--color-background)]/90 backdrop-blur">
-  <div class="container flex h-16 items-center justify-between">
-    <a href="/" class="text-sm font-semibold tracking-wide">Premium Estates</a>
-    <span class="text-xs text-[var(--color-muted-foreground)]">Header placeholder</span>
+---
+import { ThemeToggler } from '@/components/shared/ThemeToggler';
+---
+
+<header class="fixed inset-x-0 top-0 z-50">
+  <div class="container pt-3">
+    <div class="relative overflow-hidden rounded-2xl border border-[var(--color-border)]/80 bg-[color-mix(in_srgb,var(--color-background)_70%,transparent)] shadow-sm backdrop-blur-xl">
+      <div
+        class="pointer-events-none absolute inset-0"
+        style={`background:
+          radial-gradient(420px 160px at 5% -10%, color-mix(in srgb, var(--color-primary) 14%, transparent), transparent 70%),
+          radial-gradient(380px 140px at 95% 0%, color-mix(in srgb, var(--color-accent) 38%, transparent), transparent 72%);`}
+      >
+      </div>
+
+      <div class="relative flex h-16 items-center justify-between gap-3 px-4 md:h-18 md:px-6">
+        <a href="/" class="group inline-flex items-center gap-3">
+          <span
+            class="grid h-10 w-10 place-items-center overflow-hidden rounded-xl border border-[var(--color-border)] bg-white/80 shadow-sm"
+          >
+            <img src="/logo.png" width="40" height="40" alt="Step Dream logo" class="h-8 w-8 object-contain" />
+          </span>
+          <span class="leading-none">
+            <span
+              class="block bg-gradient-to-r from-[var(--color-foreground)] via-[var(--color-primary)] to-[var(--color-foreground)] bg-clip-text text-base font-semibold tracking-[0.08em] text-transparent transition-all duration-300 group-hover:tracking-[0.12em]"
+            >
+              STEP DREAM
+            </span>
+            <span class="mt-1 block text-[10px] tracking-[0.22em] text-[var(--color-muted-foreground)] uppercase">
+              premium real estate
+            </span>
+          </span>
+        </a>
+
+        <nav class="hidden items-center gap-1 md:flex">
+          <a
+            href="/"
+            class="rounded-lg px-3 py-2 text-sm text-[var(--color-muted-foreground)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-foreground)]"
+          >
+            Home
+          </a>
+          <a
+            href="/properties"
+            class="rounded-lg px-3 py-2 text-sm text-[var(--color-muted-foreground)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-foreground)]"
+          >
+            Properties
+          </a>
+          <a
+            href="/partnership"
+            class="rounded-lg px-3 py-2 text-sm text-[var(--color-muted-foreground)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-foreground)]"
+          >
+            Partnership
+          </a>
+        </nav>
+
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            id="mobile-menu-open"
+            class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[color-mix(in_srgb,var(--color-primary)_30%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-background)_78%,transparent)] text-[var(--color-foreground)] shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:shadow-md md:hidden"
+            aria-label="Open menu"
+          >
+            <span class="relative block h-4 w-4">
+              <span class="absolute top-0 left-0 h-0.5 w-4 rounded bg-current"></span>
+              <span class="absolute top-[6px] left-0 h-0.5 w-4 rounded bg-current"></span>
+              <span class="absolute top-3 left-0 h-0.5 w-4 rounded bg-current"></span>
+            </span>
+          </button>
+          <ThemeToggler client:idle />
+        </div>
+      </div>
+    </div>
   </div>
 </header>
+
+<div
+  id="mobile-menu-overlay"
+  class="pointer-events-none fixed inset-0 z-[70] bg-black/45 opacity-0 transition-opacity duration-200 md:hidden"
+></div>
+<aside
+  id="mobile-menu-panel"
+  class="fixed inset-y-0 right-0 z-[80] flex w-[86vw] max-w-[340px] translate-x-full flex-col border-l border-[color-mix(in_srgb,var(--color-primary)_24%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-background)_92%,white)] p-5 shadow-2xl backdrop-blur-xl transition-transform duration-300 md:hidden"
+>
+  <div class="mb-6 flex items-center justify-between">
+    <span class="text-xs tracking-[0.2em] text-[var(--color-muted-foreground)] uppercase">menu</span>
+    <button
+      id="mobile-menu-close"
+      type="button"
+      class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] text-lg leading-none"
+      aria-label="Close menu"
+    >
+      ×
+    </button>
+  </div>
+  <nav class="grid gap-2">
+    <a
+      href="/"
+      class="mobile-menu-link rounded-xl border border-transparent px-4 py-3 text-sm font-medium text-[var(--color-foreground)] transition hover:border-[var(--color-border)] hover:bg-[var(--color-muted)]"
+    >
+      Home
+    </a>
+    <a
+      href="/properties"
+      class="mobile-menu-link rounded-xl border border-transparent px-4 py-3 text-sm font-medium text-[var(--color-foreground)] transition hover:border-[var(--color-border)] hover:bg-[var(--color-muted)]"
+    >
+      Properties
+    </a>
+    <a
+      href="/partnership"
+      class="mobile-menu-link rounded-xl border border-transparent px-4 py-3 text-sm font-medium text-[var(--color-foreground)] transition hover:border-[var(--color-border)] hover:bg-[var(--color-muted)]"
+    >
+      Partnership
+    </a>
+  </nav>
+</aside>
+
+<script is:inline>
+  (() => {
+    const openButton = document.getElementById('mobile-menu-open');
+    const closeButton = document.getElementById('mobile-menu-close');
+    const overlay = document.getElementById('mobile-menu-overlay');
+    const panel = document.getElementById('mobile-menu-panel');
+    const links = document.querySelectorAll('.mobile-menu-link');
+    if (!openButton || !closeButton || !overlay || !panel) return;
+
+    const openMenu = () => {
+      overlay.classList.remove('pointer-events-none', 'opacity-0');
+      overlay.classList.add('opacity-100');
+      panel.classList.remove('translate-x-full');
+      document.body.style.overflow = 'hidden';
+    };
+
+    const closeMenu = () => {
+      overlay.classList.add('pointer-events-none', 'opacity-0');
+      overlay.classList.remove('opacity-100');
+      panel.classList.add('translate-x-full');
+      document.body.style.overflow = '';
+    };
+
+    openButton.addEventListener('click', openMenu);
+    closeButton.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+    links.forEach((link) => link.addEventListener('click', closeMenu));
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeMenu();
+    });
+  })();
+</script>

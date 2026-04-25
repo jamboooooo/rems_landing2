@@ -30,6 +30,10 @@ export function formatPriceRange(from: number, to: number, currency: Currency) {
   return `${compactMoney(from, currency)} - ${compactMoney(to, currency)}`;
 }
 
+export function formatFullMoney(value: number, currency: Currency) {
+  return compactMoney(value, currency);
+}
+
 export function formatRange(from: number, to: number, label: string) {
   if (from === to) {
     return `${from} ${label}${from > 1 ? 's' : ''}`;
