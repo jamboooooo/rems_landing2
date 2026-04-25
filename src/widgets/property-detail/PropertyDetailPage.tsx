@@ -70,6 +70,7 @@ function SectionTitle({
 
 export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
   const base = import.meta.env.BASE_URL;
+  const normalizedBase = base.endsWith('/') ? base : `${base}/`;
   const fallbackPhoto =
     'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&q=80';
   const photos = useMemo(() => galleryPhotos(property), [property]);
@@ -85,7 +86,7 @@ export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
 
       <Container className="relative pt-6 md:pt-8">
         <a
-          href={`${base}properties`}
+          href={`${normalizedBase}properties`}
           className="group mb-8 inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-primary)_22%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-background)_85%,white)] px-4 py-2 text-sm font-medium text-[var(--color-muted-foreground)] shadow-sm backdrop-blur transition hover:border-[color-mix(in_srgb,var(--color-primary)_45%,var(--color-border))] hover:text-[var(--color-foreground)]"
         >
           <ArrowLeft
