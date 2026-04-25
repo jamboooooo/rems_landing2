@@ -111,7 +111,7 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
       <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <article class="team-card">
           <img
-            src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=900&q=80"
+            src={`${normalizedBase}images/team-1.svg`}
             alt="Основатель и ведущий консультант"
             loading="lazy"
             class="team-card-image"
@@ -127,7 +127,7 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
 
         <article class="team-card">
           <img
-            src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=900&q=80"
+            src={`${normalizedBase}images/team-2.svg`}
             alt="Инвестиционный консультант"
             loading="lazy"
             class="team-card-image"
@@ -143,7 +143,7 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
 
         <article class="team-card">
           <img
-            src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=900&q=80"
+            src={`${normalizedBase}images/team-3.svg`}
             alt="Специалист по сделкам"
             loading="lazy"
             class="team-card-image"
@@ -159,7 +159,7 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
 
         <article class="team-card">
           <img
-            src="https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&w=900&q=80"
+            src={`${normalizedBase}images/team-4.svg`}
             alt="Клиентский менеджер"
             loading="lazy"
             class="team-card-image"
@@ -337,7 +337,7 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
     background-image:
       linear-gradient(105deg, rgb(2 6 23 / 0.84), rgb(15 23 42 / 0.6) 45%, rgb(15 23 42 / 0.42)),
       radial-gradient(circle at 80% 20%, rgb(121 66 251 / 0.34), transparent 40%),
-      url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1920&q=80');
+      url('images/hero-bg.svg');
     background-size: cover;
     background-position: center;
     box-shadow: var(--shadow-2xl);
@@ -432,14 +432,14 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
     background-image:
       linear-gradient(106deg, rgb(2 6 23 / 0.9), rgb(15 23 42 / 0.72) 44%, rgb(15 23 42 / 0.56)),
       radial-gradient(circle at 78% 18%, rgb(121 66 251 / 0.34), transparent 42%),
-      url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1920&q=80');
+      url('images/hero-bg.svg');
   }
 
   :global(html.dark) .hero-photo {
     background-image:
       linear-gradient(106deg, rgb(2 6 23 / 0.94), rgb(15 23 42 / 0.8) 44%, rgb(15 23 42 / 0.66)),
       radial-gradient(circle at 78% 18%, rgb(140 92 255 / 0.3), transparent 44%),
-      url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1920&q=80');
+      url('images/hero-bg.svg');
   }
 
   @media (min-width: 768px) {

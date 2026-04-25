@@ -9,6 +9,9 @@ import type {
 
 const AED_PER_USD = 3.67;
 const RUB_PER_USD = 92;
+const base = import.meta.env.BASE_URL;
+const normalizedBase = base.endsWith('/') ? base : `${base}/`;
+const assetUrl = (path: string) => `${normalizedBase}${path.replace(/^\/+/, '')}`;
 
 function midpoint(a: number, b: number) {
   return Math.round((a + b) / 2);
@@ -60,7 +63,7 @@ function buildAttachments(item: PropertyListItem, extraPhotos: string[]): Attach
     ...photos,
     {
       id: `${item.id}-fp`,
-      url: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=80',
+      url: assetUrl('images/property-placeholder.svg'),
       type: 'FLOOR_PLAN',
       title: 'Floor plan',
     },
@@ -111,8 +114,8 @@ export function listItemToPropertyPublic(item: PropertyListItem): PropertyPublic
   const area = Math.round(90 + hashToUnitInterval(item.id) * 420);
 
   const extraPhotos = [
-    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=80',
-    'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1400&q=80',
+    assetUrl('images/property-placeholder.svg'),
+    assetUrl('images/property-placeholder.svg'),
   ];
 
   const videoLinks =
