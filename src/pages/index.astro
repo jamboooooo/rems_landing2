@@ -6,6 +6,8 @@ import { StatsCounter } from '@/components/home/StatsCounter';
 import MapIsland from '@/components/map/MapIsland.astro';
 import MainLayout from '@/layouts/MainLayout.astro';
 import heroPlaceholder from '@/assets/hero-placeholder.svg';
+
+const base = import.meta.env.BASE_URL;
 ---
 
 <MainLayout
@@ -37,7 +39,7 @@ import heroPlaceholder from '@/assets/hero-placeholder.svg';
           </p>
           <div class="mt-7 flex flex-wrap gap-3">
             <a
-              href="/properties"
+              href={`${base}properties`}
               class="hero-btn-primary inline-flex h-11 items-center justify-center rounded-[var(--radius-md)] px-6 text-sm font-medium transition-all hover:-translate-y-0.5"
             >
               Подобрать объект

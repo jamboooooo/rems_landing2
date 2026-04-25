@@ -1,5 +1,8 @@
 ---
 import { ThemeToggler } from '@/components/shared/ThemeToggler';
+
+const base = import.meta.env.BASE_URL;
+const withBase = (path = '') => `${base}${path}`;
 ---
 
 <header class="fixed inset-x-0 top-0 z-50">
@@ -14,11 +17,11 @@ import { ThemeToggler } from '@/components/shared/ThemeToggler';
       </div>
 
       <div class="relative flex h-16 items-center justify-between gap-3 px-4 md:h-18 md:px-6">
-        <a href="/" class="group inline-flex items-center gap-3">
+        <a href={withBase()} class="group inline-flex items-center gap-3">
           <span
             class="grid h-10 w-10 place-items-center overflow-hidden rounded-xl border border-[var(--color-border)] bg-white/80 shadow-sm"
           >
-            <img src="/logo.png" width="40" height="40" alt="Step Dream logo" class="h-8 w-8 object-contain" />
+            <img src={withBase('logo.png')} width="40" height="40" alt="Step Dream logo" class="h-8 w-8 object-contain" />
           </span>
           <span class="leading-none">
             <span
@@ -34,19 +37,19 @@ import { ThemeToggler } from '@/components/shared/ThemeToggler';
 
         <nav class="hidden items-center gap-1 md:flex">
           <a
-            href="/"
+            href={withBase()}
             class="rounded-lg px-3 py-2 text-sm text-[var(--color-muted-foreground)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-foreground)]"
           >
             Home
           </a>
           <a
-            href="/properties"
+            href={withBase('properties')}
             class="rounded-lg px-3 py-2 text-sm text-[var(--color-muted-foreground)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-foreground)]"
           >
             Properties
           </a>
           <a
-            href="/partnership"
+            href={withBase('partnership')}
             class="rounded-lg px-3 py-2 text-sm text-[var(--color-muted-foreground)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-foreground)]"
           >
             Partnership
@@ -94,19 +97,19 @@ import { ThemeToggler } from '@/components/shared/ThemeToggler';
   </div>
   <nav class="grid gap-2">
     <a
-      href="/"
+      href={withBase()}
       class="mobile-menu-link rounded-xl border border-transparent px-4 py-3 text-sm font-medium text-[var(--color-foreground)] transition hover:border-[var(--color-border)] hover:bg-[var(--color-muted)]"
     >
       Home
     </a>
     <a
-      href="/properties"
+      href={withBase('properties')}
       class="mobile-menu-link rounded-xl border border-transparent px-4 py-3 text-sm font-medium text-[var(--color-foreground)] transition hover:border-[var(--color-border)] hover:bg-[var(--color-muted)]"
     >
       Properties
     </a>
     <a
-      href="/partnership"
+      href={withBase('partnership')}
       class="mobile-menu-link rounded-xl border border-transparent px-4 py-3 text-sm font-medium text-[var(--color-foreground)] transition hover:border-[var(--color-border)] hover:bg-[var(--color-muted)]"
     >
       Partnership
