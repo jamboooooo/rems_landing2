@@ -61,7 +61,7 @@ export function OfficeCarousel() {
           className="h-[16rem] w-full object-cover sm:h-[20rem] lg:h-[24rem]"
         />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/65 to-transparent p-4 text-white sm:p-6">
-          <p className="text-xs font-medium tracking-[0.08em] uppercase text-white/80">Наш офис</p>
+          <p className="text-xs font-medium tracking-[0.08em] text-white/80 uppercase">Наш офис</p>
           <h3 className="mt-1 text-xl font-semibold">{current.title}</h3>
           <p className="mt-1 max-w-2xl text-sm text-white/85 sm:text-base">{current.note}</p>
         </div>

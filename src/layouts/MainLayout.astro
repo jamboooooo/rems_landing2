@@ -29,7 +29,8 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
         const key = 'theme';
         const saved = localStorage.getItem(key);
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = saved === 'light' || saved === 'dark' ? saved : prefersDark ? 'dark' : 'light';
+        const theme =
+          saved === 'light' || saved === 'dark' ? saved : prefersDark ? 'dark' : 'light';
         document.documentElement.classList.toggle('dark', theme === 'dark');
       })();
     </script>
@@ -44,7 +45,7 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
   </head>
   <body>
     <Header />
-    <main class="min-w-0 max-w-full overflow-x-clip pt-24 md:pt-28">
+    <main class="max-w-full min-w-0 overflow-x-clip pt-24 md:pt-28">
       <slot />
     </main>
     <Footer />

@@ -6,10 +6,15 @@ import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 import compress from 'astro-compress';
+import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://example-estate.com',
+  output: 'server',
+  adapter: node({
+    mode: 'standalone',
+  }),
   integrations: [react(), sitemap(), compress()],
 
   vite: {

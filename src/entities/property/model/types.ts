@@ -126,7 +126,13 @@ export type PropertyPublic = {
   attachments: AttachmentItem[];
   preview: string;
   videoLinks: string[];
-  priceList?: { floor?: number; price: number; bedrooms: number; bathrooms: number }[];
+  priceList?: {
+    floor?: number;
+    price: number;
+    bedrooms: number;
+    bathrooms: number;
+    area?: number;
+  }[];
   prices: { usd: number; rub: number; aed: number };
 };
 

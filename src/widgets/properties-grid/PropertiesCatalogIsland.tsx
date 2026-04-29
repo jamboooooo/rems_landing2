@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { usePropertyStore } from '@/entities/property/model/store';
-import type { PropertyFilters } from '@/entities/property/model/types';
+import type { PropertyFilters, PropertyResponse } from '@/entities/property/model/types';
 import { useUrlQuerySync } from '@/shared/hooks/useUrlQuerySync';
 import { PropertiesFilters } from '@/widgets/properties-filters/PropertiesFilters';
 import { PropertiesGrid } from '@/widgets/properties-grid/PropertiesGrid';
@@ -12,9 +12,13 @@ import { PropertiesPagination } from '@/widgets/properties-pagination/Properties
 
 type PropertiesCatalogIslandProps = {
   initialFilters: PropertyFilters;
+  initialResponse: PropertyResponse;
 };
 
-export function PropertiesCatalogIsland({ initialFilters }: PropertiesCatalogIslandProps) {
+export function PropertiesCatalogIsland({
+  initialFilters,
+  initialResponse,
+}: PropertiesCatalogIslandProps) {
   const {
     filters,
     loading,
@@ -25,19 +29,27 @@ export function PropertiesCatalogIsland({ initialFilters }: PropertiesCatalogIsl
     totalPages,
     setFilters,
     setPage,
+    hydrate,
     fetchProperties,
   } = usePropertyStore();
+  const hydratedRef = useRef(false);
+  const skipFirstFetchRef = useRef(true);
 
   useEffect(() => {
-    usePropertyStore.setState({
-      filters: {
-        ...filters,
-        ...initialFilters,
-      },
+    if (hydratedRef.current) return;
+    hydrate({
+      filters: initialFilters,
+      response: initialResponse,
     });
+    hydratedRef.current = true;
   }, []);
 
   useEffect(() => {
+    if (!hydratedRef.current) return;
+    if (skipFirstFetchRef.current) {
+      skipFirstFetchRef.current = false;
+      return;
+    }
     void fetchProperties();
   }, [fetchProperties, filters]);
 

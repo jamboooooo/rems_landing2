@@ -11,7 +11,9 @@ const withBase = (path = '') => {
 
 <header class="fixed inset-x-0 top-0 z-50">
   <div class="container pt-3">
-    <div class="relative overflow-hidden rounded-2xl border border-[var(--color-border)]/80 bg-[color-mix(in_srgb,var(--color-background)_70%,transparent)] shadow-sm backdrop-blur-xl">
+    <div
+      class="relative overflow-hidden rounded-2xl border border-[var(--color-border)]/80 bg-[color-mix(in_srgb,var(--color-background)_70%,transparent)] shadow-sm backdrop-blur-xl"
+    >
       <div
         class="pointer-events-none absolute inset-0"
         style={`background:
@@ -25,7 +27,13 @@ const withBase = (path = '') => {
           <span
             class="grid h-10 w-10 place-items-center overflow-hidden rounded-xl border border-[var(--color-border)] bg-white/80 shadow-sm"
           >
-            <img src={withBase('logo.png')} width="40" height="40" alt="Step Dream logo" class="h-8 w-8 object-contain" />
+            <img
+              src={withBase('logo.png')}
+              width="40"
+              height="40"
+              alt="Step Dream logo"
+              class="h-8 w-8 object-contain"
+            />
           </span>
           <span class="leading-none">
             <span
@@ -33,7 +41,9 @@ const withBase = (path = '') => {
             >
               STEP DREAM
             </span>
-            <span class="mt-1 block text-[10px] tracking-[0.22em] text-[var(--color-muted-foreground)] uppercase">
+            <span
+              class="mt-1 block text-[10px] tracking-[0.22em] text-[var(--color-muted-foreground)] uppercase"
+            >
               premium real estate
             </span>
           </span>
@@ -83,13 +93,15 @@ const withBase = (path = '') => {
 <div
   id="mobile-menu-overlay"
   class="pointer-events-none fixed inset-0 z-[70] bg-black/45 opacity-0 transition-opacity duration-200 md:hidden"
-></div>
+>
+</div>
 <aside
   id="mobile-menu-panel"
   class="fixed inset-y-0 right-0 z-[80] flex w-[86vw] max-w-[340px] translate-x-full flex-col border-l border-[color-mix(in_srgb,var(--color-primary)_24%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-background)_92%,white)] p-5 shadow-2xl backdrop-blur-xl transition-transform duration-300 md:hidden"
 >
   <div class="mb-6 flex items-center justify-between">
-    <span class="text-xs tracking-[0.2em] text-[var(--color-muted-foreground)] uppercase">menu</span>
+    <span class="text-xs tracking-[0.2em] text-[var(--color-muted-foreground)] uppercase">menu</span
+    >
     <button
       id="mobile-menu-close"
       type="button"

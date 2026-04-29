@@ -1,5 +1,8 @@
 ---
+export const prerender = false;
+
 import MainLayout from '@/layouts/MainLayout.astro';
+import { getProperties } from '@/entities/property/api/properties.api';
 import type { PropertyFilters } from '@/entities/property/model/types';
 import { PropertiesCatalogIsland } from '@/widgets/properties-grid/PropertiesCatalogIsland';
 
@@ -26,6 +29,7 @@ const initialFilters: PropertyFilters = {
   page: numberParam(params.get('page')) ?? 1,
   limit: numberParam(params.get('limit')) ?? 9,
 };
+const initialResponse = await getProperties(initialFilters);
 ---
 
 <MainLayout
@@ -33,7 +37,11 @@ const initialFilters: PropertyFilters = {
   description="Explore curated premium real estate with elegant filtering and image-first browsing."
   pathname={Astro.url.pathname + Astro.url.search}
 >
-  <PropertiesCatalogIsland client:idle initialFilters={initialFilters} />
+  <PropertiesCatalogIsland
+    client:idle
+    initialFilters={initialFilters}
+    initialResponse={initialResponse}
+  />
 
   <section class="pb-24">
     <div class="container">

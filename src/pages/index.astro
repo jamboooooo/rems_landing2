@@ -28,10 +28,14 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
     <div class="container">
       <div class="hero-photo rounded-[var(--radius-xl)]">
         <div class="hero-content">
-          <p class="hero-eyebrow inline-flex rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-medium uppercase text-white/90 backdrop-blur">
+          <p
+            class="hero-eyebrow inline-flex rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-medium text-white/90 uppercase backdrop-blur"
+          >
             Дубай и ОАЭ | Полное сопровождение
           </p>
-          <h1 class="hero-title mt-5 max-w-4xl text-balance text-4xl font-semibold text-white sm:text-5xl lg:text-6xl">
+          <h1
+            class="hero-title mt-5 max-w-4xl text-4xl font-semibold text-balance text-white sm:text-5xl lg:text-6xl"
+          >
             Недвижимость в Дубае и ОАЭ для жизни, инвестиций и пассивного дохода
           </h1>
           <p class="hero-lead mt-5 max-w-2xl text-base text-white/85 sm:text-lg">
@@ -76,22 +80,29 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
         <p class="section-kicker">Экспертиза</p>
         <h2 class="section-title text-balance">Наша специализация</h2>
         <p class="section-description">
-          Подбираем решения под задачу клиента: инвестиции, жизнь у моря, переезд, капитализация и арендный доход.
+          Подбираем решения под задачу клиента: инвестиции, жизнь у моря, переезд, капитализация и
+          арендный доход.
         </p>
       </div>
 
       <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <article class="card-clean">
           <h3 class="text-lg font-medium">Инвестиционные объекты</h3>
-          <p class="mt-2 text-sm text-[var(--color-muted-foreground)]">Ликвидные проекты с потенциалом роста и доходности.</p>
+          <p class="mt-2 text-sm text-[var(--color-muted-foreground)]">
+            Ликвидные проекты с потенциалом роста и доходности.
+          </p>
         </article>
         <article class="card-clean">
           <h3 class="text-lg font-medium">Недвижимость у моря</h3>
-          <p class="mt-2 text-sm text-[var(--color-muted-foreground)]">Апартаменты и residences в премиальных waterfront-локациях.</p>
+          <p class="mt-2 text-sm text-[var(--color-muted-foreground)]">
+            Апартаменты и residences в премиальных waterfront-локациях.
+          </p>
         </article>
         <article class="card-clean">
           <h3 class="text-lg font-medium">Off-plan и resale</h3>
-          <p class="mt-2 text-sm text-[var(--color-muted-foreground)]">Первичный и вторичный рынок с проверкой документов и условий.</p>
+          <p class="mt-2 text-sm text-[var(--color-muted-foreground)]">
+            Первичный и вторичный рынок с проверкой документов и условий.
+          </p>
         </article>
       </div>
     </div>
@@ -270,12 +281,14 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
         <p class="section-kicker">Локации</p>
         <h2 class="section-title text-balance">Ключевые районы</h2>
         <p class="section-description">
-          Dubai Marina, Business Bay, Downtown Dubai, JVC, Dubai South, Dubai Islands, Palm Jebel Ali,
-          Meydan, MBR City, Sharjah, Ajman и другие перспективные локации.
+          Dubai Marina, Business Bay, Downtown Dubai, JVC, Dubai South, Dubai Islands, Palm Jebel
+          Ali, Meydan, MBR City, Sharjah, Ajman и другие перспективные локации.
         </p>
-        <p class="rounded-[var(--radius-lg)] border bg-[var(--color-card)] p-4 text-sm text-[var(--color-muted-foreground)]">
-          Компания работает в рамках требований рынка недвижимости Дубая. Регистрационные данные и брокерские номера
-          предоставляются по запросу и проверяются через DLD/RERA.
+        <p
+          class="rounded-[var(--radius-lg)] border bg-[var(--color-card)] p-4 text-sm text-[var(--color-muted-foreground)]"
+        >
+          Компания работает в рамках требований рынка недвижимости Дубая. Регистрационные данные и
+          брокерские номера предоставляются по запросу и проверяются через DLD/RERA.
         </p>
       </div>
       <MapIsland />
@@ -295,7 +308,9 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
         </div>
         <div class="legal-points">
           <p>Работаем в соответствии с требованиями рынка недвижимости Дубая и ОАЭ.</p>
-          <p>Регистрационные данные, лицензии и брокерские номера предоставляем клиенту по запросу.</p>
+          <p>
+            Регистрационные данные, лицензии и брокерские номера предоставляем клиенту по запросу.
+          </p>
         </div>
       </article>
     </div>
@@ -307,7 +322,8 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
         <p class="section-kicker">Быстрый старт</p>
         <h2 class="section-title text-balance">Получите персональную подборку объектов</h2>
         <p class="section-description">
-          Поможем определить стратегию, подберем релевантные варианты и дадим прозрачный план сделки.
+          Поможем определить стратегию, подберем релевантные варианты и дадим прозрачный план
+          сделки.
         </p>
         <Image
           src={heroPlaceholder}
@@ -452,15 +468,16 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
     position: relative;
     overflow: hidden;
     border: 1px solid color-mix(in srgb, var(--color-primary) 16%, var(--color-border));
-    background:
-      linear-gradient(
-        160deg,
-        color-mix(in srgb, var(--color-accent) 34%, var(--color-card)) 0%,
-        color-mix(in srgb, var(--color-card) 92%, white) 62%
-      );
+    background: linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--color-accent) 34%, var(--color-card)) 0%,
+      color-mix(in srgb, var(--color-card) 92%, white) 62%
+    );
     border-radius: var(--radius-lg);
     padding: 1.5rem;
-    transition: transform 260ms ease, box-shadow 260ms ease;
+    transition:
+      transform 260ms ease,
+      box-shadow 260ms ease;
   }
 
   .card-clean h3 {
@@ -503,7 +520,9 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
       color-mix(in srgb, var(--color-primary) 6%, var(--color-card)),
       color-mix(in srgb, var(--color-card) 96%, white)
     );
-    transition: transform 260ms ease, box-shadow 260ms ease;
+    transition:
+      transform 260ms ease,
+      box-shadow 260ms ease;
   }
 
   .team-card:hover {

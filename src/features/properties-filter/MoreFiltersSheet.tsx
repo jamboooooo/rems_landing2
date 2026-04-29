@@ -147,7 +147,9 @@ export function MoreFiltersSheet({
           <Select
             value={ownershipType}
             onValueChange={(value) =>
-              form.setValue('ownershipType', value === 'all' ? undefined : value, { shouldDirty: true })
+              form.setValue('ownershipType', value === 'all' ? undefined : value, {
+                shouldDirty: true,
+              })
             }
           >
             <SelectTrigger className={fieldClassName}>
@@ -190,11 +192,7 @@ export function MoreFiltersSheet({
               <SelectItem value="behomes">behomes</SelectItem>
             </SelectContent>
           </Select>
-          <input
-            placeholder="Location"
-            {...form.register('location')}
-            className={fieldClassName}
-          />
+          <input placeholder="Location" {...form.register('location')} className={fieldClassName} />
 
           <div className="mt-2 grid grid-cols-2 gap-3">
             <button

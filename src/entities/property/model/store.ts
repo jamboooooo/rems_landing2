@@ -8,6 +8,7 @@ import {
   PROPERTY_TYPE,
   type PropertyFilters,
   type PropertyListItem,
+  type PropertyResponse,
 } from '@/entities/property/model/types';
 import { buildCleanQuery } from '@/shared/lib/query';
 
@@ -25,6 +26,7 @@ type PropertyStore = {
   setFilters: (filters: Partial<PropertyFilters>) => void;
   setPage: (page: number) => void;
   syncFromUrl: (search: string) => void;
+  hydrate: (payload: { response: PropertyResponse; filters: PropertyFilters }) => void;
   fetchProperties: () => Promise<void>;
 };
 
@@ -98,6 +100,23 @@ export const usePropertyStore = create<PropertyStore>((set, get) => ({
         page: parseNumericParam(params.get('page')) ?? 1,
         limit: parseNumericParam(params.get('limit')) ?? state.pagination.limit,
       }),
+    }));
+  },
+  hydrate: ({ response, filters }) => {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        ...filters,
+      },
+      properties: response.data,
+      total: response.meta.total,
+      totalPages: response.meta.totalPages,
+      pagination: {
+        page: response.meta.page,
+        limit: response.meta.limit,
+      },
+      error: null,
+      loading: false,
     }));
   },
   fetchProperties: async () => {

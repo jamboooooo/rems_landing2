@@ -8,10 +8,9 @@ import {
   Sparkles,
   Video,
 } from 'lucide-react';
-import { useMemo, useState, type ReactNode } from 'react';
+import { type ReactNode, useMemo, useState } from 'react';
 
 import { YandexMap } from '@/components/map/YandexMap';
-import { Button } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Container';
 import { formatFullMoney } from '@/entities/property/lib/format';
 import type { AttachmentItem, PropertyPublic } from '@/entities/property/model/types';
@@ -21,9 +20,12 @@ import {
   statusLabels,
   typeLabels,
 } from '@/entities/property/model/types';
+import type { CurrencyRates } from '@/shared/api/currencies';
+import { convertCurrency } from '@/shared/lib/currency';
 
 type PropertyDetailPageProps = {
   property: PropertyPublic;
+  currencyRates?: CurrencyRates | null;
 };
 
 function galleryPhotos(property: PropertyPublic): string[] {
@@ -68,19 +70,164 @@ function SectionTitle({
   );
 }
 
-export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
+export function PropertyDetailPage({ property, currencyRates }: PropertyDetailPageProps) {
   const base = import.meta.env.BASE_URL;
   const normalizedBase = base.endsWith('/') ? base : `${base}/`;
   const fallbackPhoto = `${normalizedBase}images/property-placeholder.svg`;
   const photos = useMemo(() => galleryPhotos(property), [property]);
   const initialPhoto = photos[0] || property.preview || fallbackPhoto;
   const [activePhoto, setActivePhoto] = useState(initialPhoto);
+  const [selectedCurrency, setSelectedCurrency] = useState<'USD' | 'AED' | 'RUB'>(property.currency);
+  const priceList = property.priceList ?? [];
+
+  const rangeFromPriceList = useMemo(() => {
+    const priceValues = priceList
+      .map((item) => item.price)
+      .filter((value): value is number => typeof value === 'number' && Number.isFinite(value));
+    const areaValues = priceList
+      .map((item) => item.area)
+      .filter((value): value is number => typeof value === 'number' && Number.isFinite(value));
+    const priceRange =
+      priceValues.length > 0
+        ? {
+            min: Math.min(...priceValues),
+            max: Math.max(...priceValues),
+          }
+        : null;
+
+    const bedroomsValues = priceList
+      .map((item) => item.bedrooms)
+      .filter((value): value is number => typeof value === 'number' && Number.isFinite(value));
+    const areaRange =
+      areaValues.length > 0
+        ? {
+            min: Math.min(...areaValues),
+            max: Math.max(...areaValues),
+          }
+        : null;
+
+    const bathroomsValues = priceList
+      .map((item) => item.bathrooms)
+      .filter((value): value is number => typeof value === 'number' && Number.isFinite(value));
+
+    const bedroomsRange =
+      bedroomsValues.length > 0
+        ? {
+            min: Math.min(...bedroomsValues),
+            max: Math.max(...bedroomsValues),
+          }
+        : null;
+
+    const bathroomsRange =
+      bathroomsValues.length > 0
+        ? {
+            min: Math.min(...bathroomsValues),
+            max: Math.max(...bathroomsValues),
+          }
+        : null;
+
+    return { priceRange, areaRange, bedroomsRange, bathroomsRange };
+  }, [priceList]);
+
+  const usdRange = rangeFromPriceList.priceRange
+    ? {
+        min: Math.round(
+          convertCurrency(
+            rangeFromPriceList.priceRange.min,
+            property.currency,
+            'USD',
+            currencyRates,
+          ),
+        ),
+        max: Math.round(
+          convertCurrency(
+            rangeFromPriceList.priceRange.max,
+            property.currency,
+            'USD',
+            currencyRates,
+          ),
+        ),
+      }
+    : { min: property.prices.usd, max: property.prices.usd };
+
+  const aedRange = rangeFromPriceList.priceRange
+    ? {
+        min: Math.round(
+          convertCurrency(
+            rangeFromPriceList.priceRange.min,
+            property.currency,
+            'AED',
+            currencyRates,
+          ),
+        ),
+        max: Math.round(
+          convertCurrency(
+            rangeFromPriceList.priceRange.max,
+            property.currency,
+            'AED',
+            currencyRates,
+          ),
+        ),
+      }
+    : { min: property.prices.aed, max: property.prices.aed };
+
+  const rubRange = rangeFromPriceList.priceRange
+    ? {
+        min: Math.round(
+          convertCurrency(
+            rangeFromPriceList.priceRange.min,
+            property.currency,
+            'RUB',
+            currencyRates,
+          ),
+        ),
+        max: Math.round(
+          convertCurrency(
+            rangeFromPriceList.priceRange.max,
+            property.currency,
+            'RUB',
+            currencyRates,
+          ),
+        ),
+      }
+    : { min: property.prices.rub, max: property.prices.rub };
+
+  const rangesByCurrency = {
+    USD: usdRange,
+    AED: aedRange,
+    RUB: rubRange,
+  } as const;
+
+  const activeRange = rangesByCurrency[selectedCurrency];
+  const priceRangeLabel = `${formatFullMoney(activeRange.min, selectedCurrency)} - ${formatFullMoney(
+    activeRange.max,
+    selectedCurrency,
+  )}`;
+  const selectedCurrencyLabel = currencyLabels[selectedCurrency];
+
+  const bedroomsLabel = rangeFromPriceList.bedroomsRange
+    ? `${rangeFromPriceList.bedroomsRange.min}-${rangeFromPriceList.bedroomsRange.max}`
+    : property.bedrooms !== undefined
+      ? String(property.bedrooms)
+      : '—';
+
+  const bathroomsLabel = rangeFromPriceList.bathroomsRange
+    ? `${rangeFromPriceList.bathroomsRange.min}-${rangeFromPriceList.bathroomsRange.max}`
+    : property.bathrooms !== undefined
+      ? String(property.bathrooms)
+      : '—';
+
+  const areaLabel = rangeFromPriceList.areaRange
+    ? `${rangeFromPriceList.areaRange.min}-${rangeFromPriceList.areaRange.max} m²`
+    : property.area !== undefined && Number.isFinite(property.area)
+      ? `${property.area} m²`
+      : '—';
 
   const glassPanel =
     'relative overflow-hidden rounded-[1.75rem] border border-[color-mix(in_srgb,var(--color-primary)_18%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-background)_78%,transparent)] shadow-[var(--shadow-md)] backdrop-blur-xl';
 
   return (
-    <div className="relative w-full min-w-0 max-w-full overflow-x-clip pb-24">
+    <div className="relative w-full max-w-full min-w-0 overflow-x-clip pb-24">
       <div className="pointer-events-none fixed inset-0 -z-10" style={meshBg} />
 
       <Container className="relative pt-6 md:pt-8">
@@ -88,10 +235,7 @@ export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
           href={`${normalizedBase}properties`}
           className="group mb-8 inline-flex items-center gap-2 rounded-full border border-[color-mix(in_srgb,var(--color-primary)_22%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-background)_85%,white)] px-4 py-2 text-sm font-medium text-[var(--color-muted-foreground)] shadow-sm backdrop-blur transition hover:border-[color-mix(in_srgb,var(--color-primary)_45%,var(--color-border))] hover:text-[var(--color-foreground)]"
         >
-          <ArrowLeft
-            size={16}
-            className="transition-transform group-hover:-translate-x-0.5"
-          />
+          <ArrowLeft size={16} className="transition-transform group-hover:-translate-x-0.5" />
           Back to catalog
         </a>
 
@@ -142,7 +286,7 @@ export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
 
             <div className={`${glassPanel} min-w-0 p-5 sm:p-6 lg:col-span-5 lg:p-6`}>
               <div
-                className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full blur-3xl"
+                className="pointer-events-none absolute -top-16 -right-16 size-48 rounded-full blur-3xl"
                 style={{
                   background: 'color-mix(in srgb, var(--color-primary) 35%, transparent)',
                 }}
@@ -151,27 +295,25 @@ export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
                 indicative pricing
               </p>
               <p className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">
-                {formatFullMoney(property.price, property.currency)}
+                {priceRangeLabel}
               </p>
               <div className="mt-5 grid min-w-0 grid-cols-3 gap-2 sm:gap-3">
-                {(
-                  [
-                    ['USD', property.prices.usd],
-                    ['AED', property.prices.aed],
-                    ['RUB', property.prices.rub],
-                  ] as const
-                ).map(([code, amount]) => (
-                  <div
+                {(Object.keys(rangesByCurrency) as Array<keyof typeof rangesByCurrency>).map((code) => (
+                  <button
                     key={code}
-                    className="min-w-0 rounded-xl border border-[var(--color-border)]/80 bg-[var(--color-background)]/60 px-2 py-2 text-center sm:px-3 sm:py-2.5"
+                    type="button"
+                    onClick={() => setSelectedCurrency(code)}
+                    aria-pressed={selectedCurrency === code}
+                    className={`min-w-0 rounded-xl border px-2 py-2 text-center transition-colors sm:px-3 sm:py-2.5 ${
+                      selectedCurrency === code
+                        ? 'border-[var(--color-primary)] bg-[color-mix(in_srgb,var(--color-primary)_14%,var(--color-background))]'
+                        : 'border-[var(--color-border)]/80 bg-[var(--color-background)]/60 hover:bg-[var(--color-muted)]'
+                    }`}
                   >
                     <p className="text-[10px] font-medium tracking-wider text-[var(--color-muted-foreground)] uppercase">
                       {code}
                     </p>
-                    <p className="mt-1 truncate text-[11px] font-semibold text-[var(--color-foreground)] sm:text-xs">
-                      {formatFullMoney(amount, code as 'USD' | 'AED' | 'RUB')}
-                    </p>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
@@ -184,16 +326,16 @@ export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
           <div className="min-w-0 space-y-10 lg:col-span-8">
             <section className={glassPanel}>
               <div className="relative p-3 md:p-4">
-                <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:gap-4">
-                  <div className="relative min-w-0 flex-1 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-muted)] shadow-inner">
-                    <div className="relative aspect-[16/10] w-full max-h-[min(78vh,720px)] overflow-hidden">
+                <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:items-start lg:gap-4">
+                  <div className="relative min-w-0 flex-1 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-muted)] shadow-inner lg:self-start">
+                    <div className="relative h-[240px] w-full overflow-hidden sm:h-[320px] md:h-[420px] lg:h-[560px]">
                       <img
                         src={activePhoto}
                         alt=""
                         className="absolute inset-0 size-full object-cover transition duration-500"
                       />
                       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-80 md:opacity-100" />
-                      <div className="pointer-events-none absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3 md:bottom-5 md:left-5 md:right-5">
+                      <div className="pointer-events-none absolute right-4 bottom-4 left-4 flex items-end justify-between gap-3 md:right-5 md:bottom-5 md:left-5">
                         <p className="max-w-[70%] text-xs font-medium tracking-wide text-white/90 drop-shadow md:text-sm">
                           {property.location}
                         </p>
@@ -204,13 +346,13 @@ export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
                     </div>
                   </div>
                   {photos.length > 1 ? (
-                    <div className="-mx-1 flex min-w-0 gap-2 overflow-x-auto px-1 pb-1 [-webkit-overflow-scrolling:touch] lg:mx-0 lg:w-[5.75rem] lg:flex-col lg:overflow-y-auto lg:overflow-x-visible lg:px-0 lg:pb-0 lg:pr-1">
+                    <div className="-mx-1 flex min-w-0 gap-2 overflow-x-auto px-1 pb-1 [-webkit-overflow-scrolling:touch] lg:mx-0 lg:h-[560px] lg:w-[5.75rem] lg:flex-col lg:overflow-x-visible lg:overflow-y-auto lg:px-0 lg:pr-1 lg:pb-0">
                       {photos.map((url) => (
                         <button
                           key={url}
                           type="button"
                           onClick={() => setActivePhoto(url)}
-                          className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-xl border-2 transition sm:h-[4.5rem] sm:w-28 md:h-20 md:w-32 lg:aspect-square lg:w-full lg:min-h-0 ${
+                          className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-xl border-2 transition sm:h-[4.5rem] sm:w-28 md:h-20 md:w-32 lg:aspect-square lg:min-h-0 lg:w-full ${
                             url === activePhoto
                               ? 'border-[var(--color-primary)] shadow-md ring-2 ring-[color-mix(in_srgb,var(--color-primary)_35%,transparent)]'
                               : 'border-transparent opacity-75 hover:opacity-100'
@@ -231,22 +373,26 @@ export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
 
             <section className={glassPanel}>
               <div className="relative p-6 md:p-8">
-                <SectionTitle kicker="at a glance" title="Key figures" icon={<Sparkles size={22} />} />
+                <SectionTitle
+                  kicker="at a glance"
+                  title="Key figures"
+                  icon={<Sparkles size={22} />}
+                />
                 <div className="grid gap-4 sm:grid-cols-2">
                   {[
                     {
                       label: 'Total area',
-                      value: `${property.area} m²`,
+                      value: areaLabel,
                       icon: <Maximize2 className="size-5" />,
                     },
                     {
                       label: 'Bedrooms',
-                      value: String(property.bedrooms),
+                      value: bedroomsLabel,
                       icon: <BedDouble className="size-5" />,
                     },
                     {
                       label: 'Bathrooms',
-                      value: String(property.bathrooms),
+                      value: bathroomsLabel,
                       icon: <Bath className="size-5" />,
                     },
                     {
@@ -336,14 +482,18 @@ export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
                     title={property.videoLinks.length > 1 ? 'Videos' : 'Video'}
                     icon={<Video size={22} />}
                   />
-                  <div className="grid min-w-0 gap-6 md:grid-cols-2">
+                  <div
+                    className={`grid min-w-0 gap-6 ${
+                      property.videoLinks.length > 1 ? 'md:grid-cols-2' : 'grid-cols-1'
+                    }`}
+                  >
                     {property.videoLinks.map((src, index) => (
                       <div
                         key={`${src}-${index}`}
                         className="group overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-muted)]/30 shadow-sm transition hover:border-[color-mix(in_srgb,var(--color-primary)_30%,var(--color-border))] hover:shadow-md"
                       >
                         <div className="h-1 bg-gradient-to-r from-[var(--color-primary)] via-[color-mix(in_srgb,var(--color-primary)_40%,white)] to-[var(--color-primary)]" />
-                        <div className="aspect-video">
+                        <div className="aspect-video min-h-[240px]">
                           <iframe
                             title={`Property video ${index + 1}`}
                             src={src}
@@ -389,7 +539,17 @@ export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
                                 {row.bedrooms} bd · {row.bathrooms} ba
                               </td>
                               <td className="px-5 py-3.5 text-right text-base font-semibold">
-                                {formatFullMoney(row.price, property.currency)}
+                                {formatFullMoney(
+                                  Math.round(
+                                    convertCurrency(
+                                      row.price,
+                                      property.currency,
+                                      selectedCurrency,
+                                      currencyRates,
+                                    ),
+                                  ),
+                                  selectedCurrency,
+                                )}
                               </td>
                             </tr>
                           ))}
@@ -421,7 +581,7 @@ export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
             <div className={glassPanel}>
               <div className="relative p-6 md:p-7">
                 <div
-                  className="pointer-events-none absolute -left-10 top-1/2 size-40 -translate-y-1/2 rounded-full blur-3xl"
+                  className="pointer-events-none absolute top-1/2 -left-10 size-40 -translate-y-1/2 rounded-full blur-3xl"
                   style={{
                     background: 'color-mix(in srgb, var(--color-primary) 25%, transparent)',
                   }}
@@ -429,7 +589,7 @@ export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
                 <p className="text-[11px] font-medium tracking-[0.22em] text-[var(--color-muted-foreground)] uppercase">
                   private desk
                 </p>
-                <p className="mt-2 text-lg font-semibold leading-snug">
+                <p className="mt-2 text-lg leading-snug font-semibold">
                   Tailored follow-up for this residence
                 </p>
                 <p className="mt-3 text-sm leading-relaxed text-[var(--color-muted-foreground)]">
@@ -439,7 +599,7 @@ export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
                 <dl className="mt-6 space-y-4 border-t border-[var(--color-border)]/80 pt-6 text-sm">
                   <div className="flex min-w-0 justify-between gap-3">
                     <dt className="shrink-0 text-[var(--color-muted-foreground)]">Property ID</dt>
-                    <dd className="min-w-0 max-w-[58%] truncate text-right font-mono text-xs text-[var(--color-foreground)] sm:max-w-[52%]">
+                    <dd className="max-w-[58%] min-w-0 truncate text-right font-mono text-xs text-[var(--color-foreground)] sm:max-w-[52%]">
                       {property.id}
                     </dd>
                   </div>
@@ -453,15 +613,9 @@ export function PropertyDetailPage({ property }: PropertyDetailPageProps) {
                   </div>
                   <div className="flex min-w-0 justify-between gap-3">
                     <dt className="shrink-0 text-[var(--color-muted-foreground)]">Currency</dt>
-                    <dd className="font-medium">{currencyLabels[property.currency]}</dd>
+                    <dd className="font-medium">{selectedCurrencyLabel}</dd>
                   </div>
                 </dl>
-                <Button type="button" className="mt-7 w-full shadow-sm" variant="default" size="lg">
-                  Request details
-                </Button>
-                <Button type="button" className="mt-3 w-full" variant="secondary" size="lg">
-                  Schedule viewing
-                </Button>
               </div>
             </div>
           </aside>

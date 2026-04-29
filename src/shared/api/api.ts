@@ -14,11 +14,11 @@ export type ApiError = {
 
 export async function getRequest<TResponse, TQuery extends Record<string, unknown>>(
   url: string,
-  query: TQuery,
+  query?: TQuery,
 ): Promise<TResponse> {
   try {
     const response = await apiClient.get<TResponse>(url, {
-      params: buildCleanQuery(query),
+      params: query ? buildCleanQuery(query) : undefined,
     });
     return response.data;
   } catch (error) {

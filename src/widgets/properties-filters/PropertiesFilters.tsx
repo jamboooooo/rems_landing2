@@ -49,7 +49,10 @@ export function PropertiesFilters({ filters, onChange }: PropertiesFiltersProps)
           <Select
             value={filters.type ?? 'all'}
             onValueChange={(value) =>
-              onChange({ type: (value === 'all' ? undefined : value) as PropertyFilters['type'], page: 1 })
+              onChange({
+                type: (value === 'all' ? undefined : value) as PropertyFilters['type'],
+                page: 1,
+              })
             }
           >
             <SelectTrigger aria-label="Filter by property type" className={fieldClassName}>
