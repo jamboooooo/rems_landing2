@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { PropertyFilters } from '@/entities/property/model/types';
+import { PROPERTY_TYPE, type PropertyFilters, typeLabels } from '@/entities/property/model/types';
 import { MoreFiltersSheet } from '@/features/properties-filter/MoreFiltersSheet';
 import { SearchInput } from '@/features/properties-search/SearchInput';
 
@@ -60,17 +60,11 @@ export function PropertiesFilters({ filters, onChange }: PropertiesFiltersProps)
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Property Type</SelectItem>
-              <SelectItem value="VILLA">Villa</SelectItem>
-              <SelectItem value="HOUSE">House</SelectItem>
-              <SelectItem value="TOWNHOUSE">Townhouse</SelectItem>
-              <SelectItem value="APARTMENT">Apartment</SelectItem>
-              <SelectItem value="PENTHOUSE">Penthouse</SelectItem>
-              <SelectItem value="LOFT">Loft</SelectItem>
-              <SelectItem value="STUDIO">Studio</SelectItem>
-              <SelectItem value="DUPLEX">Duplex</SelectItem>
-              <SelectItem value="BUNGALOW">Bungalow</SelectItem>
-              <SelectItem value="MANSION">Mansion</SelectItem>
-              <SelectItem value="SERVICED_APARTMENT">Serviced Apartment</SelectItem>
+              {PROPERTY_TYPE.map((propertyType) => (
+                <SelectItem key={propertyType} value={propertyType}>
+                  {typeLabels[propertyType]}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
 
@@ -95,7 +89,7 @@ export function PropertiesFilters({ filters, onChange }: PropertiesFiltersProps)
           <input
             type="number"
             inputMode="numeric"
-            placeholder="Bedrooms"
+            placeholder="Bedrooms from"
             value={filters.bedroomsFrom ?? ''}
             onChange={(e) =>
               onChange({ bedroomsFrom: Number(e.target.value) || undefined, page: 1 })

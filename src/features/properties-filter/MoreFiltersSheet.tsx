@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -11,16 +11,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { getLocations } from '@/entities/property/api/properties.api';
 import type {
   OwnershipType,
   PropertyFilters,
   PropertySource,
   PropertyStatus,
 } from '@/entities/property/model/types';
+import {
+  OWNERSHIP_TYPE,
+  ownershipTypeLabels,
+  PROPERTY_SOURCE,
+  PROPERTY_STATUS,
+  statusLabels,
+} from '@/entities/property/model/types';
+
+const optionalNumber = z.preprocess(
+  (value) => {
+    if (value === '' || value === null || value === undefined) return undefined;
+    if (typeof value === 'number' && Number.isNaN(value)) return undefined;
+    return value;
+  },
+  z.coerce.number().optional(),
+);
 
 const schema = z.object({
-  bathroomsFrom: z.coerce.number().optional(),
-  bathroomsTo: z.coerce.number().optional(),
+  bedroomsTo: optionalNumber,
+  bathroomsFrom: optionalNumber,
+  bathroomsTo: optionalNumber,
   ownershipType: z.string().optional(),
   status: z.string().optional(),
   source: z.string().optional(),
@@ -43,10 +61,13 @@ export function MoreFiltersSheet({
   onApply,
 }: MoreFiltersSheetProps) {
   const [mounted, setMounted] = useState(false);
+  const [locationOptions, setLocationOptions] = useState<string[]>([]);
+  const locationListId = useId();
   const fieldClassName =
     'h-11 rounded-xl border border-[color-mix(in_srgb,var(--color-primary)_18%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-background)_90%,white)] px-3 text-sm shadow-sm transition outline-none placeholder:text-[var(--color-muted-foreground)] focus-visible:border-[color-mix(in_srgb,var(--color-primary)_55%,var(--color-border))] focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]';
   const form = useForm<MoreFiltersValues>({
     defaultValues: {
+      bedroomsTo: initialFilters.bedroomsTo,
       bathroomsFrom: initialFilters.bathroomsFrom,
       bathroomsTo: initialFilters.bathroomsTo,
       ownershipType: initialFilters.ownershipType,
@@ -58,6 +79,7 @@ export function MoreFiltersSheet({
   const ownershipType = form.watch('ownershipType') ?? 'all';
   const status = form.watch('status') ?? 'all';
   const source = form.watch('source') ?? 'all';
+  const location = form.watch('location') ?? '';
 
   useEffect(() => {
     setMounted(true);
@@ -90,6 +112,26 @@ export function MoreFiltersSheet({
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+    const query = location.trim();
+    if (query.length < 2) {
+      setLocationOptions([]);
+      return;
+    }
+
+    const timeoutId = window.setTimeout(async () => {
+      try {
+        const options = await getLocations(query);
+        setLocationOptions(options);
+      } catch {
+        setLocationOptions([]);
+      }
+    }, 300);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [location, open]);
+
   if (!open || !mounted) return null;
 
   return createPortal(
@@ -119,6 +161,7 @@ export function MoreFiltersSheet({
           onSubmit={form.handleSubmit((values) => {
             const parsed = schema.parse(values);
             onApply({
+              bedroomsTo: parsed.bedroomsTo,
               bathroomsFrom: parsed.bathroomsFrom,
               bathroomsTo: parsed.bathroomsTo,
               ownershipType: parsed.ownershipType as OwnershipType | undefined,
@@ -129,6 +172,13 @@ export function MoreFiltersSheet({
             onClose();
           })}
         >
+          <input
+            placeholder="Bedrooms to"
+            type="number"
+            {...form.register('bedroomsTo', { valueAsNumber: true })}
+            className={fieldClassName}
+          />
+
           <div className="grid grid-cols-2 gap-3">
             <input
               placeholder="Bathrooms from"
@@ -157,8 +207,11 @@ export function MoreFiltersSheet({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Ownership</SelectItem>
-              <SelectItem value="FREEHOLD">Freehold</SelectItem>
-              <SelectItem value="LEASEHOLD">Leasehold</SelectItem>
+              {OWNERSHIP_TYPE.map((ownership) => (
+                <SelectItem key={ownership} value={ownership}>
+                  {ownershipTypeLabels[ownership]}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <Select
@@ -172,9 +225,11 @@ export function MoreFiltersSheet({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Status</SelectItem>
-              <SelectItem value="COMPLETED">Ready</SelectItem>
-              <SelectItem value="HANDOVER_IN">Handover Soon</SelectItem>
-              <SelectItem value="UNDER_CONSTRUCTION">Under Construction</SelectItem>
+              {PROPERTY_STATUS.map((propertyStatus) => (
+                <SelectItem key={propertyStatus} value={propertyStatus}>
+                  {statusLabels[propertyStatus]}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <Select
@@ -188,11 +243,27 @@ export function MoreFiltersSheet({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Source</SelectItem>
-              <SelectItem value="stepalliance">stepalliance</SelectItem>
-              <SelectItem value="behomes">behomes</SelectItem>
+              {PROPERTY_SOURCE.map((propertySource) => (
+                <SelectItem key={propertySource} value={propertySource}>
+                  {propertySource}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
-          <input placeholder="Location" {...form.register('location')} className={fieldClassName} />
+          <div className="grid gap-2">
+            <input
+              placeholder="Location"
+              list={locationListId}
+              autoComplete="off"
+              {...form.register('location')}
+              className={fieldClassName}
+            />
+            <datalist id={locationListId}>
+              {locationOptions.map((option) => (
+                <option key={option} value={option} />
+              ))}
+            </datalist>
+          </div>
 
           <div className="mt-2 grid grid-cols-2 gap-3">
             <button
