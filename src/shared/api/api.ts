@@ -29,3 +29,19 @@ export async function getRequest<TResponse, TQuery extends Record<string, unknow
     } satisfies ApiError;
   }
 }
+
+export async function postRequest<TResponse, TBody extends Record<string, unknown>>(
+  url: string,
+  body: TBody,
+): Promise<TResponse> {
+  try {
+    const response = await apiClient.post<TResponse>(url, body);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    throw {
+      message: axiosError.response?.data?.message ?? 'Request failed',
+      status: axiosError.response?.status,
+    } satisfies ApiError;
+  }
+}

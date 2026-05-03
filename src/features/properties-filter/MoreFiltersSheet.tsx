@@ -1,9 +1,11 @@
-import { X } from 'lucide-react';
-import { useEffect, useId, useState } from 'react';
+import { Check, ChevronDown, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { Input } from '@/components/ui/Input';
+import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -25,6 +27,7 @@ import {
   PROPERTY_STATUS,
   statusLabels,
 } from '@/entities/property/model/types';
+import { cn } from '@/lib/utils';
 
 const optionalNumber = z.preprocess(
   (value) => {
@@ -47,6 +50,11 @@ const schema = z.object({
 
 type MoreFiltersValues = z.infer<typeof schema>;
 
+function normalizeOptionalNumber(value: unknown): number | undefined {
+  if (typeof value !== 'number') return undefined;
+  return Number.isNaN(value) ? undefined : value;
+}
+
 type MoreFiltersSheetProps = {
   open: boolean;
   onClose: () => void;
@@ -62,24 +70,46 @@ export function MoreFiltersSheet({
 }: MoreFiltersSheetProps) {
   const [mounted, setMounted] = useState(false);
   const [locationOptions, setLocationOptions] = useState<string[]>([]);
-  const locationListId = useId();
+  const [locationLoading, setLocationLoading] = useState(false);
+  const [locationSearchedEmpty, setLocationSearchedEmpty] = useState(false);
+  const [locationFocused, setLocationFocused] = useState(false);
+  const [suppressLocationSuggest, setSuppressLocationSuggest] = useState(false);
+  const locationInputRef = useRef<HTMLInputElement | null>(null);
+  /** Skip resetting suppress once after programmatic `.focus()` from picking a suggestion. */
+  const skipSuppressResetOnFocusRef = useRef(false);
   const fieldClassName =
     'h-11 rounded-xl border border-[color-mix(in_srgb,var(--color-primary)_18%,var(--color-border))] bg-[color-mix(in_srgb,var(--color-background)_90%,white)] px-3 text-sm shadow-sm transition outline-none placeholder:text-[var(--color-muted-foreground)] focus-visible:border-[color-mix(in_srgb,var(--color-primary)_55%,var(--color-border))] focus-visible:ring-2 focus-visible:ring-[var(--color-ring)]';
+  const formValuesFromFilters = (filters: PropertyFilters): MoreFiltersValues => ({
+    bedroomsTo: filters.bedroomsTo,
+    bathroomsFrom: filters.bathroomsFrom,
+    bathroomsTo: filters.bathroomsTo,
+    ownershipType: filters.ownershipType,
+    status: filters.status,
+    source: filters.source,
+    location: filters.location,
+  });
   const form = useForm<MoreFiltersValues>({
-    defaultValues: {
-      bedroomsTo: initialFilters.bedroomsTo,
-      bathroomsFrom: initialFilters.bathroomsFrom,
-      bathroomsTo: initialFilters.bathroomsTo,
-      ownershipType: initialFilters.ownershipType,
-      status: initialFilters.status,
-      source: initialFilters.source,
-      location: initialFilters.location,
-    },
+    defaultValues: formValuesFromFilters(initialFilters),
   });
   const ownershipType = form.watch('ownershipType') ?? 'all';
   const status = form.watch('status') ?? 'all';
   const source = form.watch('source') ?? 'all';
   const location = form.watch('location') ?? '';
+
+  const {
+    ref: locationRegisterRef,
+    onBlur: locationOnBlur,
+    onChange: locationOnChange,
+    ...locationRegisterRest
+  } = form.register('location');
+
+  const locationQueryTrimmed = location.trim();
+  const showLocationPopover =
+    open &&
+    locationFocused &&
+    !suppressLocationSuggest &&
+    locationQueryTrimmed.length >= 2 &&
+    (locationLoading || locationOptions.length > 0 || locationSearchedEmpty);
 
   useEffect(() => {
     setMounted(true);
@@ -113,23 +143,49 @@ export function MoreFiltersSheet({
   }, [open]);
 
   useEffect(() => {
-    if (!open) return;
-    const query = location.trim();
-    if (query.length < 2) {
+    if (!open) {
       setLocationOptions([]);
+      setLocationLoading(false);
+      setLocationSearchedEmpty(false);
+      setLocationFocused(false);
+      setSuppressLocationSuggest(false);
+      skipSuppressResetOnFocusRef.current = false;
+    }
+  }, [open]);
+
+  useEffect(() => {
+    form.reset(formValuesFromFilters(initialFilters));
+  }, [form, initialFilters]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const q = location.trim();
+    if (q.length < 2) {
+      setLocationOptions([]);
+      setLocationSearchedEmpty(false);
+      setLocationLoading(false);
       return;
     }
 
-    const timeoutId = window.setTimeout(async () => {
-      try {
-        const options = await getLocations(query);
-        setLocationOptions(options);
-      } catch {
-        setLocationOptions([]);
-      }
+    const handle = window.setTimeout(() => {
+      void (async () => {
+        setLocationLoading(true);
+        setLocationSearchedEmpty(false);
+        try {
+          const items = await getLocations(q);
+          setLocationOptions(items);
+          setLocationSearchedEmpty(items.length === 0);
+        } catch {
+          setLocationOptions([]);
+          setLocationSearchedEmpty(true);
+        } finally {
+          setLocationLoading(false);
+        }
+      })();
     }, 300);
 
-    return () => window.clearTimeout(timeoutId);
+    return () => window.clearTimeout(handle);
   }, [location, open]);
 
   if (!open || !mounted) return null;
@@ -159,15 +215,26 @@ export function MoreFiltersSheet({
         <form
           className="relative grid gap-4"
           onSubmit={form.handleSubmit((values) => {
-            const parsed = schema.parse(values);
+            const parsed = schema.safeParse(values);
+            const normalized = parsed.success
+              ? parsed.data
+              : {
+                  bedroomsTo: normalizeOptionalNumber(values.bedroomsTo),
+                  bathroomsFrom: normalizeOptionalNumber(values.bathroomsFrom),
+                  bathroomsTo: normalizeOptionalNumber(values.bathroomsTo),
+                  ownershipType: values.ownershipType,
+                  status: values.status,
+                  source: values.source,
+                  location: values.location,
+                };
             onApply({
-              bedroomsTo: parsed.bedroomsTo,
-              bathroomsFrom: parsed.bathroomsFrom,
-              bathroomsTo: parsed.bathroomsTo,
-              ownershipType: parsed.ownershipType as OwnershipType | undefined,
-              status: parsed.status as PropertyStatus | undefined,
-              source: parsed.source as PropertySource | undefined,
-              location: parsed.location,
+              bedroomsTo: normalized.bedroomsTo,
+              bathroomsFrom: normalized.bathroomsFrom,
+              bathroomsTo: normalized.bathroomsTo,
+              ownershipType: normalized.ownershipType as OwnershipType | undefined,
+              status: normalized.status as PropertyStatus | undefined,
+              source: normalized.source as PropertySource | undefined,
+              location: normalized.location,
             });
             onClose();
           })}
@@ -250,20 +317,109 @@ export function MoreFiltersSheet({
               ))}
             </SelectContent>
           </Select>
-          <div className="grid gap-2">
-            <input
-              placeholder="Location"
-              list={locationListId}
-              autoComplete="off"
-              {...form.register('location')}
-              className={fieldClassName}
-            />
-            <datalist id={locationListId}>
-              {locationOptions.map((option) => (
-                <option key={option} value={option} />
-              ))}
-            </datalist>
-          </div>
+          <Popover
+            modal={false}
+            open={showLocationPopover}
+            onOpenChange={(next) => {
+              if (!next) setSuppressLocationSuggest(true);
+            }}
+          >
+            <PopoverAnchor asChild>
+              <div
+                className="relative w-full"
+                onPointerDownCapture={() => setSuppressLocationSuggest(false)}
+              >
+                <Input
+                  aria-autocomplete="list"
+                  aria-expanded={showLocationPopover}
+                  autoCapitalize="off"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  placeholder="Location"
+                  spellCheck={false}
+                  {...locationRegisterRest}
+                  ref={(el) => {
+                    locationRegisterRef(el);
+                    locationInputRef.current = el;
+                  }}
+                  className={cn(
+                    fieldClassName,
+                    'ring-offset-transparent focus-visible:border-[color-mix(in_srgb,var(--color-primary)_55%,var(--color-border))] focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] focus-visible:ring-offset-2',
+                    'min-h-11 w-full pr-10 shadow-sm',
+                  )}
+                  onFocus={() => {
+                    setLocationFocused(true);
+                    if (!skipSuppressResetOnFocusRef.current) {
+                      setSuppressLocationSuggest(false);
+                    }
+                  }}
+                  onChange={(event) => {
+                    locationOnChange?.(event);
+                    setSuppressLocationSuggest(false);
+                  }}
+                  onBlur={(event) => {
+                    locationOnBlur?.(event);
+                    window.setTimeout(() => setLocationFocused(false), 200);
+                  }}
+                />
+                <ChevronDown
+                  aria-hidden
+                  className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-[var(--color-muted-foreground)] opacity-60"
+                />
+              </div>
+            </PopoverAnchor>
+            <PopoverContent
+              align="start"
+              className="p-1 text-sm shadow-md"
+              side="bottom"
+              sideOffset={4}
+              onCloseAutoFocus={(event) => {
+                event.preventDefault();
+              }}
+              onInteractOutside={() => setSuppressLocationSuggest(true)}
+              onOpenAutoFocus={(event) => event.preventDefault()}
+            >
+              {locationLoading ? (
+                <p className="px-2 py-1.5 text-[var(--color-muted-foreground)]">Loading…</p>
+              ) : null}
+              {!locationLoading && locationOptions.length === 0 && locationSearchedEmpty ? (
+                <p className="px-2 py-1.5 text-[var(--color-muted-foreground)]">No matches</p>
+              ) : null}
+              {locationOptions.map((option) => {
+                const selected = option.trim() === location.trim();
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    title={option}
+                    className={cn(
+                      'relative flex w-full cursor-pointer items-center truncate rounded-[var(--radius-sm)] py-1.5 pr-8 pl-2 text-left transition-colors outline-none select-none',
+                      'hover:bg-[var(--color-muted)] hover:text-[var(--color-foreground)]',
+                      'focus:bg-[var(--color-muted)] focus:text-[var(--color-foreground)]',
+                      selected && 'bg-[var(--color-muted)]',
+                    )}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={() => {
+                      form.setValue('location', option, { shouldDirty: true });
+                      setSuppressLocationSuggest(true);
+                      skipSuppressResetOnFocusRef.current = true;
+                      queueMicrotask(() => {
+                        locationInputRef.current?.focus({ preventScroll: true });
+                        requestAnimationFrame(() => {
+                          skipSuppressResetOnFocusRef.current = false;
+                        });
+                      });
+                    }}
+                  >
+                    <span className="min-w-0 flex-1 truncate">{option}</span>
+                    <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
+                      {selected ? <Check className="h-4 w-4" aria-hidden /> : null}
+                    </span>
+                  </button>
+                );
+              })}
+            </PopoverContent>
+          </Popover>
 
           <div className="mt-2 grid grid-cols-2 gap-3">
             <button

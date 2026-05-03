@@ -1,0 +1,28 @@
+{
+    "employees": [
+        {
+            "name": "Беслан Терекбаев",
+            "position": "CEO",
+            "image": "https://s3.regru.cloud/rems/landing%20assets/beslan.JPG",
+            "instagram": "https://www.instagram.com/terekbaev?igsh=Z2cwNmVpcnBob3gy"
+        },
+        {
+            "name": "Магомед Юнусов",
+            "position": "Брокер",
+            "image": "https://s3.regru.cloud/rems/landing%20assets/magomed_fr.jpeg",
+            "instagram": "https://www.instagram.com/magabroker_dubai?igsh=aWwwcmJkZGExMjIw"
+        },
+        {
+            "name": "Магомед Якубов",
+            "position": "Брокер",
+            "image": "https://s3.regru.cloud/rems/landing%20assets/magomed.jpeg",
+            "instagram": ""
+        },
+        {
+            "name": "Заур Магомедов",
+            "position": "Брокер",
+            "image": "https://s3.regru.cloud/rems/landing%20assets/zaur.jpeg",
+            "instagram": "https://www.instagram.com/zaur.dubai?igsh=enVmcDF5ZXdzZnZ2"
+        }
+    ]
+}

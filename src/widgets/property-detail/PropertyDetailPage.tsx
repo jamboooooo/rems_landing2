@@ -8,9 +8,8 @@ import {
   Sparkles,
   Video,
 } from 'lucide-react';
-import { type ReactNode, useMemo, useState } from 'react';
+import { lazy, type ReactNode, Suspense, useMemo, useState } from 'react';
 
-import { YandexMap } from '@/components/map/YandexMap';
 import { Container } from '@/components/ui/Container';
 import { formatFullMoney } from '@/entities/property/lib/format';
 import type { AttachmentItem, PropertyPublic } from '@/entities/property/model/types';
@@ -20,8 +19,14 @@ import {
   statusLabels,
   typeLabels,
 } from '@/entities/property/model/types';
+import { PublicApplicationForm } from '@/features/applications/ui/PublicApplicationForm';
 import type { CurrencyRates } from '@/shared/api/currencies';
 import { convertCurrency } from '@/shared/lib/currency';
+
+const LazyYandexMap = lazy(async () => {
+  const module = await import('@/components/map/YandexMap');
+  return { default: module.YandexMap };
+});
 
 type PropertyDetailPageProps = {
   property: PropertyPublic;
@@ -568,10 +573,18 @@ export function PropertyDetailPage({ property, currencyRates }: PropertyDetailPa
                   {property.location}
                 </p>
                 <div className="max-w-full min-w-0 overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-inner">
-                  <YandexMap
-                    center={[property.mapCoordinates.lat, property.mapCoordinates.lng]}
-                    zoom={13}
-                  />
+                  <Suspense
+                    fallback={
+                      <div className="grid h-[340px] place-items-center text-sm text-[var(--color-muted-foreground)]">
+                        Loading map...
+                      </div>
+                    }
+                  >
+                    <LazyYandexMap
+                      center={[property.mapCoordinates.lat, property.mapCoordinates.lng]}
+                      zoom={13}
+                    />
+                  </Suspense>
                 </div>
               </div>
             </section>
@@ -596,6 +609,9 @@ export function PropertyDetailPage({ property, currencyRates }: PropertyDetailPa
                   Share your brief and we will confirm availability, comparable sales, and next
                   steps.
                 </p>
+                <div className="mt-6 border-t border-[var(--color-border)]/80 pt-6">
+                  <PublicApplicationForm propertyId={property.id} />
+                </div>
                 <dl className="mt-6 space-y-4 border-t border-[var(--color-border)]/80 pt-6 text-sm">
                   <div className="flex min-w-0 justify-between gap-3">
                     <dt className="shrink-0 text-[var(--color-muted-foreground)]">Property ID</dt>

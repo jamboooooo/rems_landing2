@@ -2,6 +2,7 @@
 import SEOHead from '@/components/seo/SEOHead.astro';
 import Footer from '@/components/shared/Footer.astro';
 import Header from '@/components/shared/Header.astro';
+import { ReferralSync } from '@/features/referral/ReferralSync';
 import '@/styles/globals.css';
 
 type Props = {
@@ -44,6 +45,7 @@ const normalizedBase = base.endsWith('/') ? base : `${base}/`;
     />
   </head>
   <body>
+    <ReferralSync client:load />
     <Header />
     <main class="max-w-full min-w-0 overflow-x-clip pt-24 md:pt-28">
       <slot />

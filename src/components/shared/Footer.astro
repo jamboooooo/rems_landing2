@@ -1,5 +1,149 @@
-<footer class="border-t border-[var(--color-border)]">
-  <div class="container py-8 text-sm text-[var(--color-muted-foreground)]">
-    Footer placeholder. Copyright {new Date().getFullYear()}.
+---
+const year = new Date().getFullYear();
+
+const academy = {
+  title: 'StepDream Academy',
+  description:
+    'Академия брокеров по зарубежной недвижимости. Станьте успешным брокером в Дубае.',
+};
+
+const contacts = {
+  lines: ['Dubai Hills Estate, Park Heights Square 1', '6th Floor – Dubai, UAE'],
+  phone: '+971 55 283 6575',
+  phoneHref: 'tel:+971552836575',
+  email: 'academystepdream@gmail.com',
+  emailHref: 'mailto:academystepdream@gmail.com',
+};
+
+const socialLinks = [
+  {
+    label: 'Instagram',
+    value: 'stepdream.ae',
+    href: 'https://www.instagram.com/stepdream.ae',
+  },
+  {
+    label: 'Telegram',
+    value: 'stepdreamunits',
+    href: 'https://t.me/stepdreamunits',
+  },
+  {
+    label: 'WhatsApp',
+    value: '+971 50 309 5810',
+    href: 'https://wa.me/971503095810',
+  },
+];
+
+const iconClass =
+  'h-4 w-4 shrink-0 text-[var(--color-foreground)] transition group-hover:text-[var(--color-primary)]';
+---
+
+<footer
+  class="relative border-t border-[color-mix(in_srgb,var(--color-border)_70%,transparent)] bg-[var(--color-background)] text-[var(--color-foreground)]"
+>
+  <div
+    class="pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-[color-mix(in_srgb,var(--color-primary)_22%,transparent)] to-transparent"
+    aria-hidden="true"
+  />
+
+  <div class="container relative mx-auto px-4 py-12 md:py-14 lg:px-6">
+    <div class="grid gap-10 md:grid-cols-3 md:gap-8 lg:gap-12">
+      <div class="flex flex-col gap-3">
+        <p class="text-base font-semibold tracking-tight text-[var(--color-foreground)]">
+          {academy.title}
+        </p>
+        <p class="max-w-sm text-sm leading-relaxed text-[var(--color-muted-foreground)]">
+          {academy.description}
+        </p>
+      </div>
+
+      <section class="flex flex-col gap-3" aria-labelledby="footer-social-heading">
+        <h2
+          id="footer-social-heading"
+          class="text-base font-semibold tracking-tight text-[var(--color-foreground)]"
+        >
+          Наши соцсети
+        </h2>
+        <ul class="flex flex-col gap-2 text-sm text-[var(--color-muted-foreground)]" data-footer-social-slot>
+          {
+            socialLinks.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  class="group inline-flex w-fit items-center gap-2 underline-offset-4 transition hover:text-[var(--color-foreground)] hover:underline"
+                  aria-label={`${item.label}: ${item.value}`}
+                >
+                  {
+                    item.label === 'Instagram' ? (
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        aria-hidden="true"
+                        class={iconClass}
+                      >
+                        <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8"></rect>
+                        <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"></circle>
+                        <circle cx="17.4" cy="6.7" r="1.1" fill="currentColor"></circle>
+                      </svg>
+                    ) : item.label === 'Telegram' ? (
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        aria-hidden="true"
+                        class={iconClass}
+                      >
+                        <path d="M21 4L3.8 10.5c-.8.3-.8 1.4.1 1.7l4.1 1.3 1.6 4.8c.3.9 1.4 1 1.8.1l2.3-4 4.9 3.6c.7.5 1.7.1 1.9-.8L22 5.5c.2-1-.7-1.8-1.6-1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
+                        <path d="m8.1 13.6 10.7-7.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                      </svg>
+                    ) : (
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        aria-hidden="true"
+                        class={iconClass}
+                      >
+                        <path d="M20.5 12.1a8.5 8.5 0 0 1-12.4 7.6L3.5 21l1.4-4.3a8.5 8.5 0 1 1 15.6-4.6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+                        <path d="M8.8 9.7c.2-.4.4-.5.8-.4l1 .3c.4.1.6.6.5 1l-.2.8c0 .2 0 .4.2.5l1.7 1.7c.2.2.4.2.6.2l.7-.2c.4-.1.9.1 1 .5l.3 1c.1.4 0 .6-.4.8-.6.3-1.3.4-2 .2-1.8-.5-4.4-3.1-4.9-4.9-.2-.7-.1-1.4.2-2Z" fill="currentColor"></path>
+                      </svg>
+                    )
+                  }
+                  <span>{item.value}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <address class="flex flex-col gap-3 not-italic">
+        <h2 class="text-base font-semibold tracking-tight text-[var(--color-foreground)]">
+          Контакты
+        </h2>
+        <div class="flex flex-col gap-1 text-sm leading-relaxed text-[var(--color-muted-foreground)]">
+          {contacts.lines.map((line) => <span>{line}</span>)}
+          <a
+            href={contacts.phoneHref}
+            class="mt-2 w-fit font-medium text-[var(--color-foreground)] underline-offset-4 transition hover:underline"
+          >
+            {contacts.phone}
+          </a>
+          <a
+            href={contacts.emailHref}
+            class="w-fit underline-offset-4 transition hover:underline hover:text-[var(--color-foreground)]"
+          >
+            {contacts.email}
+          </a>
+        </div>
+      </address>
+    </div>
+
+    <div
+      class="mt-12 border-t border-[color-mix(in_srgb,var(--color-border)_80%,transparent)] pt-8"
+    >
+      <p class="text-center text-xs text-[var(--color-muted-foreground)]">
+        © {year} StepDream Academy. Все права защищены.
+      </p>
+    </div>
   </div>
 </footer>

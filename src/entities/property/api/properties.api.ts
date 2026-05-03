@@ -11,10 +11,14 @@ type LocationsResponse = {
   }>;
 };
 
-export async function getLocations(q: string): Promise<string[]> {
-  if (!q.trim()) return [];
+export async function getLocations(query?: string): Promise<string[]> {
+  const trimmed = query?.trim() ?? '';
+  const params =
+    trimmed.length > 0
+      ? ({ q: trimmed } satisfies { q: string })
+      : undefined;
 
-  const response = await getRequest<LocationsResponse, { q: string }>('/addresses', { q });
+  const response = await getRequest<LocationsResponse, { q?: string }>('/addresses', params);
   return Array.from(
     new Set(
       (response.data ?? [])

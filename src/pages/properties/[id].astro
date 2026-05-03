@@ -9,17 +9,37 @@ import { PropertyDetailPage } from '@/widgets/property-detail/PropertyDetailPage
 const { id } = Astro.params;
 const property = id ? await getPropertyPublic(id) : null;
 const currencyRates = await getCurrencies().catch(() => null);
-
-if (!property) {
-  return Astro.redirect('/properties');
-}
-
-const title = `${property.name} | Step Dream`;
-const description =
-  property.description?.slice(0, 155) ??
-  `${property.type} in ${property.location} — ${property.developer}`;
+const title = property ? `${property.name} | Step Dream` : 'Property details | Step Dream';
+const description = property
+  ? property.description?.slice(0, 155) ?? `${property.type} in ${property.location} — ${property.developer}`
+  : 'Property details are temporarily unavailable. Please return to catalog and try again.';
 ---
 
 <MainLayout title={title} description={description} pathname={Astro.url.pathname}>
-  <PropertyDetailPage client:load property={property} currencyRates={currencyRates} />
+  {
+    property ? (
+      <PropertyDetailPage client:load property={property} currencyRates={currencyRates} />
+    ) : (
+      <section class="section-padding">
+        <div class="container">
+          <div class="rounded-[var(--radius-xl)] border bg-[var(--color-card)] p-8 text-center shadow-[var(--shadow-md)]">
+            <p class="text-xs tracking-[0.14em] text-[var(--color-muted-foreground)] uppercase">
+              Property details
+            </p>
+            <h1 class="mt-3 text-2xl font-semibold md:text-3xl">Не удалось открыть объект</h1>
+            <p class="mx-auto mt-3 max-w-2xl text-sm text-[var(--color-muted-foreground)]">
+              Объект может быть недоступен или временно не удалось получить данные с API. Попробуйте
+              вернуться в каталог и открыть карточку снова.
+            </p>
+            <a
+              href="/properties"
+              class="mt-6 inline-flex items-center rounded-xl border px-5 py-3 text-sm font-medium transition-colors hover:bg-[var(--color-muted)]"
+            >
+              Вернуться в каталог
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
 </MainLayout>
